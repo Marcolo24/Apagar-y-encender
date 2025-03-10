@@ -6,6 +6,10 @@ use App\Http\Controllers\AdminController;
 
 // Página de inicio ahora muestra el login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
+Route::get('/dashboard/admin', function () {
+    return view('dashboard.admin');
+})->name('dashboard.admin');
+
 
 // Rutas de autenticación
 Route::post('/login', [AuthController::class, 'login'])->name('login');
