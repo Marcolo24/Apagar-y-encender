@@ -1,7 +1,7 @@
 @extends('layout.layout')
 
-@section('title', 'Admin')
+@section('title', 'Tecnico')
 
 @section('content')
-    <h1>Admin</h1>
+    <h1>Tecnico</h1>
 @endsection

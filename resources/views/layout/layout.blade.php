@@ -14,13 +14,27 @@
 </head>
 <body>
     <header>
-        <h1>Header</h1>
+        <div id="divHeader">
+            <div>
+                <img id="logo" src={{asset('/img/logo.png')}} alt="">
+            </div>
+            <div>
+               <h1 id="titulo" class="margin0">SolveIT</h1> 
+            </div>
+            <div>
+                <div>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <img id="btnCerrarSesion" src="{{ asset('/img/cerrarSesion.png') }}" alt="Cerrar sesión">
+                    </a>
+                </div>                
+            </div>
+        </div>
     </header>
     <main>
         @yield('content') <!-- Aquí se inyectará el contenido de las vistas hijas -->
     </main>
-    <footer>
-        <h1>Footer</h1>
-    </footer>
 </body>
 </html>
