@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use App\Models\Rol;
 
 class AuthController extends Controller
 {
@@ -31,21 +32,14 @@ class AuthController extends Controller
             'password.required' => 'La contraseña es obligatoria.',
         ]);
 
-        // Definir la clave de control de intentos fallidos
-        $throttleKey = 'login_attempts_' . $request->ip();
-
-        // Verificar si hay demasiados intentos
-        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
-            return back()->withErrors(['error' => 'Demasiados intentos. Inténtalo en 60 segundos.']);
-        }
+        
 
         // Buscar el usuario por email
         $user = User::where('email', $request->email)->first();
 
         // Verificar si el usuario existe y la contraseña es correcta
         if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
-            RateLimiter::clear($throttleKey); // Resetear intentos fallidos
+            Auth::login($user); // Resetear intentos fallidos
 
             switch ($user->id_rol) {
                 case 1:
@@ -60,9 +54,6 @@ class AuthController extends Controller
                     return redirect()->route('home');
             }
         }
-
-        // Registrar el intento fallido
-        RateLimiter::hit($throttleKey, 60); // Bloquea por 60 segundos después de 5 intentos
 
         return back()->withErrors(['credentials' => 'Credenciales incorrectas.']);
     }
