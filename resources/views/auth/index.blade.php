@@ -30,7 +30,6 @@
                     </span>
                 @endif
                 
-                <a href="#" class="forgot-password">¿Has olvidado tu contraseña?</a>
                 <button type="submit">IDENTIFICATE</button>
             </div>
         </div>
