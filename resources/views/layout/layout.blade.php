@@ -23,9 +23,14 @@
                <h1 id="titulo" class="margin0">SolveIT</h1> 
             </div>
             <div>
-                <a href="">
-                    <img id="btnCerrarSesion" src={{asset('/img/cerrarSesion.png')}} alt="">
-                </a>
+                <div>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <img id="btnCerrarSesion" src="{{ asset('/img/cerrarSesion.png') }}" alt="Cerrar sesión">
+                    </a>
+                </div>                
             </div>
         </div>
     </header>
