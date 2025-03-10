@@ -101,3 +101,9 @@ Aquest sistema permetrà als treballadors registrar incidències i als tècnics 
 👨‍💻 **Sergi Masip**  
 
 💡 _Projecte desenvolupat en Laravel per a la gestió eficient d’incidències informàtiques!_ 🚀
+
+---
+
+## 🎨 **Link Figma**
+🔗 [Figma](https://www.figma.com/design/2QHdoFKcyqa4PhpMTlU45C/Untitled?node-id=0-1&t=tNNhuQ5jRlkujV64-1)
+
