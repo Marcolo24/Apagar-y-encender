@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GestorController;
 
 // Página de inicio ahora muestra el login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
