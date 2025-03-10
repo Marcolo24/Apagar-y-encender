@@ -18,13 +18,42 @@ class UserSeeder extends Seeder
                 'id_rol' => 1,
                 'id_sede' => 1,
                 'id_estado_usuario' => 1,
-                'name' => 'Juan',
-                'apellidos' => 'Pérez',
-                'correo' => 'juan.perez@example.com',
+                'name' => 'Admin',
+                'apellidos' => 'Admin',
+                'correo' => 'admin@example.com',
                 'password' => Hash::make('qweQWE123'),
-                'email' => 'juan.perez@example.com',
+                'email' => 'admin@example.com',
             ],
-            // Agrega más usuarios si es necesario
+            [
+                'id_rol' => 2,
+                'id_sede' => 1,
+                'id_estado_usuario' => 1,
+                'name' => 'Tecnico',
+                'apellidos' => 'Tecnico',
+                'correo' => 'tecnico@example.com',
+                'password' => Hash::make('qweQWE123'),
+                'email' => 'tecnico@example.com',
+            ],
+            [
+                'id_rol' => 3,
+                'id_sede' => 1,
+                'id_estado_usuario' => 1,
+                'name' => 'Gestor',
+                'apellidos' => 'Gestor',
+                'correo' => 'gestor@example.com',
+                'password' => Hash::make('qweQWE123'),
+                'email' => 'gestor@example.com',
+            ],
+            [
+                'id_rol' => 4,
+                'id_sede' => 1,
+                'id_estado_usuario' => 1,
+                'name' => 'Cliente',
+                'apellidos' => 'Cliente',
+                'correo' => 'cliente@example.com',
+                'password' => Hash::make('qweQWE123'),
+                'email' => 'cliente@example.com',
+            ],
         ]);
     }
-} 
+}

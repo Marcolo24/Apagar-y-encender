@@ -23,9 +23,10 @@ class RolSeeder extends Seeder
 
         // Inserta nuevos registros
         DB::table('rol')->insert([
-            ['id' => 1, 'nombre' => 'Administrador'],
-            ['id' => 2, 'nombre' => 'Usuario'],
-            ['id' => 3, 'nombre' => 'Invitado'],
+            ['id' => 1, 'nombre' => 'Admin'],
+            ['id' => 2, 'nombre' => 'Tecnico'],
+            ['id' => 3, 'nombre' => 'Gestor'],
+            ['id' => 4, 'nombre' => 'Cliente'],
         ]);
     }
 } 

@@ -10,6 +10,7 @@ use Database\Seeders\RolSeeder;
 use Database\Seeders\EstadoIncidenciaSeeder;
 use Database\Seeders\SedeSeeder;
 use Database\Seeders\EstadoUsuarioSeeder;
+use Database\Seeders\UserSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             EstadoUsuarioSeeder::class,
             CategoriaSeeder::class,
             EstadoIncidenciaSeeder::class,
+            UserSeeder::class,
         ]);
 
         User::factory()->create([
