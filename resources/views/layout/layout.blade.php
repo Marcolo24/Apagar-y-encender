@@ -37,7 +37,6 @@
     <main>
         @yield('content') <!-- Aquí se inyectará el contenido de las vistas hijas -->
     </main>
-    <script src="{{asset('/js/login.js')}}"></script>
-
+    @yield('scripts') <!-- Aquí ponemos el contenido de la validación JS-->
 </body>
 </html>
