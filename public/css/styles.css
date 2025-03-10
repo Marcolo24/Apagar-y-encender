@@ -45,12 +45,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 30px;
   }
 
   #btnCerrarSesion {
     height: 50%;
+    transition: transform 0.1s;
   }
+
+  #btnCerrarSesion:hover {
+    transform: scale(1.2);
+  }
+
   
+
   .btn {
-    border-radius: 25px;
+    border-radius: 15px;
+  }
+
+  .margin0 {
+    margin:0;
+  }
+
+  #titulo {
+    font-size: 50px;
   }

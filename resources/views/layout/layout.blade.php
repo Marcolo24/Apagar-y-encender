@@ -19,10 +19,12 @@
                 <img id="logo" src={{asset('/img/logo.png')}} alt="">
             </div>
             <div>
-               <h1>SolveIT</h1> 
+               <h1 id="titulo" class="margin0">SolveIT</h1> 
             </div>
             <div>
-                <button id="btnCerrarSesion" class="btn btn-outline-danger">Cerrar sesión</button>
+                <a href="">
+                    <img id="btnCerrarSesion" src={{asset('/img/cerrarSesion.png')}} alt="">
+                </a>
             </div>
         </div>
     </header>
