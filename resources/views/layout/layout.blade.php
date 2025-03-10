@@ -14,13 +14,20 @@
 </head>
 <body>
     <header>
-        <h1>Header</h1>
+        <div id="divHeader">
+            <div>
+                <img id="logo" src={{asset('/img/logo.png')}} alt="">
+            </div>
+            <div>
+               <h1>SolveIT</h1> 
+            </div>
+            <div>
+                <button id="btnCerrarSesion" class="btn btn-outline-danger">Cerrar sesión</button>
+            </div>
+        </div>
     </header>
     <main>
         @yield('content') <!-- Aquí se inyectará el contenido de las vistas hijas -->
     </main>
-    <footer>
-        <h1>Footer</h1>
-    </footer>
 </body>
 </html>
