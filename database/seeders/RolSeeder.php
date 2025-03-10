@@ -12,10 +12,20 @@ class RolSeeder extends Seeder
      */
     public function run(): void
     {
+        // Deshabilitar las verificaciones de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Truncar la tabla
+        DB::table('rol')->truncate();
+
+        // Habilitar las verificaciones de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // Inserta nuevos registros
         DB::table('rol')->insert([
-            ['nombre' => 'Administrador'],
-            ['nombre' => 'Usuario'],
-            ['nombre' => 'Invitado'],
+            ['id' => 1, 'nombre' => 'Administrador'],
+            ['id' => 2, 'nombre' => 'Usuario'],
+            ['id' => 3, 'nombre' => 'Invitado'],
         ]);
     }
 } 

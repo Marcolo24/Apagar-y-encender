@@ -13,9 +13,9 @@ class EstadoUsuarioSeeder extends Seeder
     public function run(): void
     {
         DB::table('estado_usuario')->insert([
-            ['nombre' => 'Activo'],
-            ['nombre' => 'Inactivo'],
-            ['nombre' => 'Suspendido'],
+            ['id' => 1, 'nombre' => 'Activo'],
+            ['id' => 2, 'nombre' => 'Inactivo'],
+            ['id' => 3, 'nombre' => 'Suspendido'],
         ]);
     }
 } 

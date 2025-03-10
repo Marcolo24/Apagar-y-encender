@@ -12,10 +12,20 @@ class SedeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Deshabilitar las verificaciones de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Truncar la tabla
+        DB::table('sede')->truncate();
+
+        // Habilitar las verificaciones de claves foráneas
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        // Inserta nuevos registros
         DB::table('sede')->insert([
-            ['nombre' => 'Central'],
-            ['nombre' => 'Sucursal Norte'],
-            ['nombre' => 'Sucursal Sur'],
+            ['id' => 1, 'nombre' => 'Central'],
+            ['id' => 2, 'nombre' => 'Sucursal Norte'],
+            ['id' => 3, 'nombre' => 'Sucursal Sur'],
         ]);
     }
 } 
