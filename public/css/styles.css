@@ -175,13 +175,16 @@
 
   .error-message {
     color: red;
-    font-size: 14px;
+    font-size: 120%;
+
   }
 
   .invalid-feedback {
     color: red;
     display: block;
     margin-top: 5px;
+    font-size: 120%;
+
   }
 
   /* Ocultar el header en la página de login */

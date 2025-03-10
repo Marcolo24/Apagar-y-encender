@@ -29,12 +29,13 @@
                         {{ $errors->first('credentials') }}
                     </span>
                 @endif
-                
+
                 <button type="submit">IDENTIFICATE</button>
             </div>
         </div>
     </form>
 </div>
+
 @endsection
 
 
