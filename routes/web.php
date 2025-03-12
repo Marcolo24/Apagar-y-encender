@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GestorController;
 
 // Página de inicio ahora muestra el login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
