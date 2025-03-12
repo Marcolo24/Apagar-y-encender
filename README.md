@@ -105,5 +105,5 @@ Aquest sistema permetrà als treballadors registrar incidències i als tècnics 
 ---
 
 ## 🎨 **Link Figma**
-🔗 [Figma](https://www.figma.com/design/2QHdoFKcyqa4PhpMTlU45C/Untitled?node-id=0-1&t=tNNhuQ5jRlkujV64-1)
+🔗 [Figma](https://www.figma.com/design/oe4Z7UW6LS2dIWRVCyPFWP/Untitled?node-id=0-1&t=NPNv246xz9SzUlA0-1)
 
