@@ -12,14 +12,25 @@ use App\Models\Rol;
 class AuthController extends Controller
 {
     public function showLogin()
-    {
-        if (Auth::check()) {
-            return Auth::user()->id_rol == 1 
-                ? redirect()->route('dashboard.admin') 
-                : redirect()->route('home');
+{
+    if (Auth::check()) {
+        switch (Auth::user()->id_rol) {
+            case 1:
+                return redirect()->route('dashboard.admin');
+            case 2:
+                return redirect()->route('dashboard.tecnico');
+            case 3:
+                return redirect()->route('dashboard.gestor');
+            case 4:
+                return redirect()->route('dashboard.cliente');
+            default:
+                Auth::logout();
+                return redirect()->route('index')->withErrors(['access' => 'No tienes acceso al sistema.']);
         }
-        return view('auth.index');
     }
+    return view('auth.index');
+}
+
 
     public function login(Request $request)
     {
@@ -51,7 +62,7 @@ class AuthController extends Controller
                 case 4:
                     return redirect()->route('dashboard.cliente');
                 default:
-                    return redirect()->route('home');
+                    return redirect()->route('index');
             }
         }
 
