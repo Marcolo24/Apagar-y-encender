@@ -6,16 +6,21 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GestorController;
 
-// Página de inicio ahora muestra el login
+// Página de inicio con el formulario de login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
 
 // Rutas de autenticación
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Rutas protegidas por autenticación y control de roles
+// Ruta del Gestor que muestra las incidencias
 Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
+        ->name('dashboard.gestor');
+});
 
+// Rutas protegidas por autenticación y roles
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/admin', function (Request $request) {
         if (Auth::user()->id_rol != 1) {
             return redirect()->route('index'); // Redirigir si no es admin
@@ -30,12 +35,8 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.tecnico');
     })->name('dashboard.tecnico');
 
-    Route::get('/dashboard/gestor', function (Request $request) {
-        if (Auth::user()->id_rol != 3) {
-            return redirect()->route('index'); // Redirigir si no es gestor
-        }
-        return view('dashboard.gestor');
-    })->name('dashboard.gestor');
+    Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
+        ->name('dashboard.gestor');
 
     Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {
