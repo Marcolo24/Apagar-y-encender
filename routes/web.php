@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GestorController;
+use App\Http\Controllers\ClienteController;
 
 // Página de inicio ahora muestra el login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
@@ -37,10 +38,14 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.gestor');
     })->name('dashboard.gestor');
 
-    Route::get('/dashboard/cliente', function (Request $request) {
+    /*Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {
             return redirect()->route('index'); // Redirigir si no es cliente
         }
         return view('dashboard.cliente');
-    })->name('dashboard.cliente');
+    })->name('dashboard.cliente');*/
+
+    Route::get('/dashboard/cliente', [ClienteController::class, 'index'])->name('dashboard.cliente');
+    Route::put('/incidencias/cerrar/{id}', [ClienteController::class, 'cerrarIncidencia'])->name('incidencias.cerrar');
+    Route::post('/incidencias/crear', [ClienteController::class, 'crearIncidencia'])->name('incidencias.crear');
 });
