@@ -35,9 +35,6 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.tecnico');
     })->name('dashboard.tecnico');
 
-    Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
-        ->name('dashboard.gestor');
-
     Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {
             return redirect()->route('index'); // Redirigir si no es cliente

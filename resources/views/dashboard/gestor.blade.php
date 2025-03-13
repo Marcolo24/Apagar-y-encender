@@ -11,9 +11,9 @@
         <table border="1" cellpadding="10" cellspacing="0">
             <thead>
                 <tr>
-                    <th>Título</th>
+                    <th>Incidencia</th>
                     <th>Descripción</th>
-                    <th>ID Cliente</th>
+                    <th>Cliente afectado</th>
                     <th>Prioridad</th>
                     <th>Estado</th>
                 </tr>
@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ $incidencia->titulo }}</td>
                         <td>{{ $incidencia->descripcion }}</td>
-                        <td>{{ $incidencia->id_cliente }}</td> 
+                        <td>{{ $incidencia->cliente->name }}</td> 
                         <td>{{ $incidencia->prioridad->nombre }}</td>
                         <td>
                             @if ($incidencia->id_estado == 1)
