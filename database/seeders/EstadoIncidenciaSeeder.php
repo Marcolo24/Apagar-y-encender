@@ -13,9 +13,11 @@ class EstadoIncidenciaSeeder extends Seeder
     public function run(): void
     {
         DB::table('estado_incidencia')->insert([
-            ['nombre' => 'Abierto'],
-            ['nombre' => 'En Progreso'],
-            ['nombre' => 'Cerrado'],
+            ['id' => 1, 'nombre' => 'Sense assignar'],
+            ['id' => 2, 'nombre' => 'Assignada'],
+            ['id' => 3, 'nombre' => 'En treball'],
+            ['id' => 4, 'nombre' => 'Resoluta'],
+            ['id' => 5, 'nombre' => 'Tancada'],
         ]);
     }
 } 
