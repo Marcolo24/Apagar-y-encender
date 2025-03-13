@@ -14,24 +14,24 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-
-    
 </head>
 <body>
     <header>
         <div id="divHeader">
             <div>
-                <img id="logo" src={{asset('/img/logo.png')}} alt="">
+                <img id="logo" src="{{ asset('/img/logo.png') }}" alt="">
             </div>
             <div>
                <h1 id="titulo" class="margin0">SolveIT</h1> 
             </div>
-            <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span id="rolUsuario">
+                    {{ Auth::user()->rol->nombre ?? 'Desconocido' }}
+                </span>
                 <div>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
-
                     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <img id="btnCerrarSesion" src="{{ asset('/img/cerrarSesion.png') }}" alt="Cerrar sesión">
                     </a>

@@ -3,7 +3,7 @@
 @section('title', 'Gestor')
 
 @section('content')
-    <h1>Gestor</h1>
+    <br>
 
     @if($incidencias->isEmpty())
         <p>No hay incidencias registradas.</p>

@@ -4,8 +4,7 @@
 
 @section('content')
     <br>
-    <h1>Admin</h1>
-    <br>
+
     <table>
         <thead>
             <tr>

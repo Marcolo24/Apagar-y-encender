@@ -6,51 +6,51 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Incidencia;
 use App\Models\EstadoIncidencia;
+use App\Models\Prioridad;
+use App\Models\Subcategoria;
 use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
     public function index(Request $request)
-    {
-        // Verifica que el usuario autenticado sea un cliente
-        if (Auth::user()->id_rol != 4) {
-            return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
-        }
-
-        // Obtener incidencias del cliente autenticado con filtros opcionales
-        $query = Incidencia::where('id_cliente', Auth::id())
-                            ->with(['estado', 'prioridad', 'subcategoria']);
-
-        if ($request->has('estado')) {
-            $query->whereHas('estado', function ($q) use ($request) {
-                $q->where('nombre', $request->estado);
-            });
-        }
-
-        if ($request->has('orden') && in_array($request->orden, ['asc', 'desc'])) {
-            $query->orderBy('fecha_inicio', $request->orden);
-        } else {
-            $query->orderBy('fecha_inicio', 'desc'); // Orden por defecto
-        }
-
-        $incidencias = $query->get();
-
-        return view('dashboard.cliente', compact('incidencias'));
+{
+    if (Auth::user()->id_rol != 4) {
+        return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
     }
+
+    $query = Incidencia::where('id_cliente', Auth::id())->with(['estado', 'prioridad', 'subcategoria']);
+
+    if ($request->has('estado')) {
+        $query->whereHas('estado', function ($q) use ($request) {
+            $q->where('nombre', $request->estado);
+        });
+    }
+
+    if ($request->has('orden') && in_array($request->orden, ['asc', 'desc'])) {
+        $query->orderBy('fecha_inicio', $request->orden);
+    } else {
+        $query->orderBy('fecha_inicio', 'desc');
+    }
+
+    $incidencias = $query->get();
+    $prioridades = \App\Models\Prioridad::all();
+    $subcategorias = \App\Models\Subcategoria::all();
+
+    return view('dashboard.cliente', compact('incidencias', 'prioridades', 'subcategorias'));
+}
 
     public function cerrarIncidencia($id)
     {
         $incidencia = Incidencia::where('id', $id)
                                 ->where('id_cliente', Auth::id())
                                 ->whereHas('estado', function ($q) {
-                                    $q->where('nombre', 'Resuelta'); // Aquí estaba el error
+                                    $q->where('nombre', 'Resuelta');
                                 })
                                 ->firstOrFail();
 
-        // Obtener el ID del estado "Tancada"
         $estadoTancada = EstadoIncidencia::where('nombre', 'Tancada')->firstOrFail();
 
-        $incidencia->id_estado = $estadoTancada->id; // Cambia al estado "Tancada"
+        $incidencia->id_estado = $estadoTancada->id;
         $incidencia->fecha_final = Carbon::now();
         $incidencia->save();
 
@@ -68,7 +68,7 @@ class ClienteController extends Controller
 
         $estadoInicial = EstadoIncidencia::where('nombre', 'Sin asignar')->firstOrFail();
 
-        Incidencia::create([
+        $incidencia = Incidencia::create([
             'titulo' => $request->titulo,
             'descripcion' => $request->descripcion,
             'id_cliente' => Auth::id(),
@@ -79,6 +79,9 @@ class ClienteController extends Controller
             'img' => $request->img ?? null
         ]);
 
-        return redirect()->route('dashboard.cliente')->with('success', 'Incidencia registrada correctamente.');
+        return response()->json([
+            'message' => 'Incidencia registrada correctamente.',
+            'incidencia' => $incidencia->load('prioridad', 'estado')
+        ]);
     }
 }
