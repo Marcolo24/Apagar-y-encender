@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +22,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
         ->name('dashboard.gestor');
-
+    
     Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
         ->name('dashboard.admin');
     
@@ -58,4 +58,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/cliente', [ClienteController::class, 'index'])->name('dashboard.cliente');
     Route::put('/incidencias/cerrar/{id}', [ClienteController::class, 'cerrarIncidencia'])->name('incidencias.cerrar');
     Route::post('/incidencias/crear', [ClienteController::class, 'crearIncidencia'])->name('incidencias.crear');
+// Ruta para actualizar la incidencia (estado y prioridad)
+Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class, 'updateIncidencia'])->name('gestor.updateIncidencia');
 });
+
+// Ruta para ver incidencias asignadas a técnicos
+Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'verIncidenciasTecnico'])->name('gestor.verIncidenciasTecnico');

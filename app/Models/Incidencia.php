@@ -1,51 +1,41 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User; // 🔹 Importar User
-use App\Models\Prioridad;
+use App\Models\User; // Importar User
+use App\Models\Prioridad; // Importar Prioridad
+use App\Models\Estado; // Importar Estado
 
 class Incidencia extends Model
 {
     use HasFactory;
 
-    protected $table = 'incidencia'; // Nombre real de la tabla en la BD
+    protected $table = 'incidencia';
+    public $timestamps = false; // No gestionamos las fechas 'created_at' y 'updated_at'
 
-    protected $fillable = [
-        'titulo', 'descripcion', 'id_cliente', 'id_tecnico', 'id_estado',
-        'id_subcategoria', 'id_prioridad', 'fecha_inicio', 'fecha_final', 'img'
-    ];
-
-    public $timestamps = false; // No usamos `created_at` y `updated_at`
-
-    // Relación con el usuario (cliente)
+    // Relación con el modelo User (cliente)
     public function cliente()
     {
         return $this->belongsTo(User::class, 'id_cliente');
     }
 
-    // Relación con el usuario (técnico)
-    public function tecnico()
-    {
-        return $this->belongsTo(User::class, 'id_tecnico');
-    }
-
-    // Relación con el estado de la incidencia
-    public function estado()
-    {
-        return $this->belongsTo(EstadoIncidencia::class, 'id_estado');
-    }
-
-    // Relación con la prioridad
+    // Relación con el modelo Prioridad
     public function prioridad()
     {
         return $this->belongsTo(Prioridad::class, 'id_prioridad');
     }
 
-    // Relación con la subcategoría
-    public function subcategoria()
+    // Relación con el modelo Estado (estado de la incidencia)
+    public function estado()
     {
-        return $this->belongsTo(Subcategoria::class, 'id_subcategoria');
+        return $this->belongsTo(Estado::class, 'id_estado'); // Relacionamos con la columna id_estado
+    }
+
+    // Relación con el técnico asignado (si existe)
+    public function tecnico()
+    {
+        return $this->belongsTo(User::class, 'id_tecnico');
     }
 }
