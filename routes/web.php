@@ -1,10 +1,12 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GestorController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\IncidenciaController;
 
 // Página de inicio con el formulario de login
@@ -18,18 +20,20 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
         ->name('dashboard.gestor');
+    
+    Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
+        ->name('dashboard.admin');
 });
 
 // Rutas protegidas por autenticación y roles
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard/admin', function (Request $request) {
-        if (Auth::user()->id_rol != 1) {
-            return redirect()->route('index'); // Redirigir si no es admin
-        }
-        return view('dashboard.admin');
-    })->name('dashboard.admin');
 
-    Route::get('/dashboard/tecnico', [IncidenciaController::class, 'index'])->name('dashboard.tecnico');
+    Route::get('/dashboard/tecnico', function (Request $request) {
+        if (Auth::user()->id_rol != 2) {
+            return redirect()->route('index'); // Redirigir si no es técnico
+        }
+        return view('dashboard.tecnico');
+    })->name('dashboard.tecnico');
 
     Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {
@@ -38,10 +42,6 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.cliente');
     })->name('dashboard.cliente');
 
-    // Rutas para las acciones de las incidencias
-    Route::get('/incidencia/asignar/{id}', [IncidenciaController::class, 'asignar'])->name('incidencia.asignar');
-    Route::get('/incidencia/desasignar/{id}', [IncidenciaController::class, 'desasignar'])->name('incidencia.desasignar');
-    Route::get('/incidencias/empezar/{id}', [IncidenciaController::class, 'empezar'])->name('incidencias.empezar');
-    Route::get('/incidencias/resolver/{id}', [IncidenciaController::class, 'resolver'])->name('incidencias.resolver');
-    Route::get('/incidencias/mensaje/{id}', [IncidenciaController::class, 'mensaje'])->name('incidencias.mensaje');
+    // Ruta para actualizar la incidencia (estado y prioridad)
+    Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class, 'updateIncidencia'])->name('gestor.updateIncidencia');
 });

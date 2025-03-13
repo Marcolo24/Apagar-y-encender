@@ -20,4 +20,4 @@ class EstadoIncidenciaSeeder extends Seeder
             ['id' => 5, 'nombre' => 'Cerrada'],
         ]);
     }
-} 
+}

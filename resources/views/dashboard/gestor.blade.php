@@ -16,6 +16,7 @@
                     <th>Cliente afectado</th>
                     <th>Prioridad</th>
                     <th>Estado</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,18 +24,40 @@
                     <tr>
                         <td>{{ $incidencia->titulo }}</td>
                         <td>{{ $incidencia->descripcion }}</td>
-                        <td>{{ $incidencia->cliente->name }}</td> 
-                        <td>{{ $incidencia->prioridad->nombre }}</td>
+                        <td>{{ $incidencia->cliente->name }}</td>
+                        
+                        <!-- Desplegable para cambiar la prioridad -->
                         <td>
-                            @if ($incidencia->id_estado == 1)
-                                Abierto
-                            @elseif ($incidencia->id_estado == 2)
-                                En progreso
-                            @elseif ($incidencia->id_estado == 3)
-                                Cerrado
-                            @else
-                                Desconocido
-                            @endif
+                            <form action="{{ route('gestor.updateIncidencia', $incidencia->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <select name="id_prioridad">
+                                    @foreach ($prioridades as $prioridad)
+                                        <option value="{{ $prioridad->id }}" 
+                                            @if ($incidencia->id_prioridad == $prioridad->id) selected @endif>
+                                            {{ $prioridad->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                        </td>
+
+                        <!-- Desplegable para cambiar el estado -->
+                        <td>
+                            <select name="id_estado">
+                                @foreach ($estados as $estado)
+                                    <option value="{{ $estado->id }}" 
+                                        @if ($incidencia->id_estado == $estado->id) selected @endif>
+                                        {{ $estado->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+
+                        <!-- Botón de actualizar -->
+                        <td>
+                            <button type="submit">Actualizar</button>
+                        </form>
                         </td>
                     </tr>
                 @endforeach
