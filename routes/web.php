@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GestorController;
+use App\Http\Controllers\IncidenciaController;
 
 // Página de inicio ahora muestra el login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
@@ -23,12 +24,7 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.admin');
     })->name('dashboard.admin');
 
-    Route::get('/dashboard/tecnico', function (Request $request) {
-        if (Auth::user()->id_rol != 2) {
-            return redirect()->route('index'); // Redirigir si no es técnico
-        }
-        return view('dashboard.tecnico');
-    })->name('dashboard.tecnico');
+    Route::get('/dashboard/tecnico', [IncidenciaController::class, 'index'])->name('dashboard.tecnico');
 
     Route::get('/dashboard/gestor', function (Request $request) {
         if (Auth::user()->id_rol != 3) {
@@ -43,4 +39,11 @@ Route::middleware(['auth'])->group(function () {
         }
         return view('dashboard.cliente');
     })->name('dashboard.cliente');
+
+    // Rutas para las acciones de las incidencias
+    Route::get('/incidencia/asignar/{id}', [IncidenciaController::class, 'asignar'])->name('incidencia.asignar');
+    Route::get('/incidencia/desasignar/{id}', [IncidenciaController::class, 'desasignar'])->name('incidencia.desasignar');
+    Route::get('/incidencias/empezar/{id}', [IncidenciaController::class, 'empezar'])->name('incidencias.empezar');
+    Route::get('/incidencias/resolver/{id}', [IncidenciaController::class, 'resolver'])->name('incidencias.resolver');
+    Route::get('/incidencias/mensaje/{id}', [IncidenciaController::class, 'mensaje'])->name('incidencias.mensaje');
 });
