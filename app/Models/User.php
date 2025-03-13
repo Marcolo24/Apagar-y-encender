@@ -45,4 +45,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class, 'id_rol');
+    }
+
+    public function sede()
+    {
+        return $this->belongsTo(Sede::class, 'id_sede');
+    }
 }

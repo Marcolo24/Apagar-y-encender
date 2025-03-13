@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GestorController;
+use App\Http\Controllers\AdminController;
 
 // Página de inicio con el formulario de login
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
@@ -18,16 +19,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
         ->name('dashboard.gestor');
+
+    Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
+        ->name('dashboard.admin');
+
+    
 });
 
 // Rutas protegidas por autenticación y roles
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard/admin', function (Request $request) {
-        if (Auth::user()->id_rol != 1) {
-            return redirect()->route('index'); // Redirigir si no es admin
-        }
-        return view('dashboard.admin');
-    })->name('dashboard.admin');
+
 
     Route::get('/dashboard/tecnico', function (Request $request) {
         if (Auth::user()->id_rol != 2) {
@@ -35,9 +36,6 @@ Route::middleware(['auth'])->group(function () {
         }
         return view('dashboard.tecnico');
     })->name('dashboard.tecnico');
-
-    Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
-        ->name('dashboard.gestor');
 
     Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {
