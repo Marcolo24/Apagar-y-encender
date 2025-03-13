@@ -27,8 +27,9 @@
                     <td>
                         @if($incidencia->estado->nombre == 'Asignada')
                             <a href="{{ route('incidencias.empezar', $incidencia->id) }}" class="btn btn-primary">Empezar</a>
-                        @elseif($incidencia->estado->nombre == 'En treball')
+                        @elseif($incidencia->estado->nombre == 'En trabajo')
                             <a href="{{ route('incidencias.resolver', $incidencia->id) }}" class="btn btn-success">Resolver</a>
+                            <a href="{{ route('incidencias.mensaje', $incidencia->id) }}" class="btn btn-info">Enviar Mensaje</a>
                         @endif
                     </td>
                 </tr>

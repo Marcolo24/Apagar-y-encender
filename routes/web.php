@@ -9,6 +9,8 @@ use App\Http\Controllers\GestorController;
 use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 
 // Página de inicio con el formulario de login
@@ -37,9 +39,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/gestor', function (Request $request) {
         if (Auth::user()->id_rol != 3) {
-            return redirect()->route('index'); // Redirigir si no es gestor
+            return Redirect::route('index');
         }
-        return view('dashboard.gestor');
+        return View::make('dashboard.gestor');
     })->name('dashboard.gestor');
 
     /*Route::get('/dashboard/cliente', function (Request $request) {

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Incidencia;
 use Illuminate\Http\Request;
+use App\Models\EstadoIncidencia;
 
 class IncidenciaController extends Controller
 {
@@ -29,22 +30,22 @@ class IncidenciaController extends Controller
 
     public function empezar($id)
     {
-        $incidencia = Incidencia::find($id);
-        if ($incidencia->estado->nombre == 'Asignada') {
-            $incidencia->id_estado = 3; // Cambiar a "En treball"
-            $incidencia->save();
-        }
-        return redirect()->route('dashboard.tecnico');
+        $incidencia = Incidencia::findOrFail($id);
+        $estadoEnTrabajo = EstadoIncidencia::where('nombre', 'En trabajo')->firstOrFail();
+        $incidencia->id_estado = $estadoEnTrabajo->id;
+        $incidencia->save();
+
+        return redirect()->route('dashboard.tecnico')->with('success', 'Incidencia comenzada.');
     }
 
     public function resolver($id)
     {
-        $incidencia = Incidencia::find($id);
-        if ($incidencia->estado->nombre == 'En treball') {
-            $incidencia->id_estado = 4; // Cambiar a "Resolta"
-            $incidencia->save();
-        }
-        return redirect()->route('dashboard.tecnico');
+        $incidencia = Incidencia::findOrFail($id);
+        $estadoResuelta = EstadoIncidencia::where('nombre', 'Resuelta')->firstOrFail();
+        $incidencia->id_estado = $estadoResuelta->id;
+        $incidencia->save();
+
+        return redirect()->route('dashboard.tecnico')->with('success', 'Incidencia resuelta.');
     }
 
     public function cerrar($id)
@@ -56,7 +57,7 @@ class IncidenciaController extends Controller
 
     public function mensaje($id)
     {
-        // Lógica para enviar un mensaje al cliente
-        return redirect()->route('dashboard.tecnico');
+        // Implementa la lógica para enviar un mensaje al cliente
+        return view('incidencias.mensaje', compact('id'));
     }
 }
