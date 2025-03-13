@@ -5,6 +5,9 @@
 @section('content')
     <h1>Gestor</h1>
 
+    <!-- Botón para ver incidencias asignadas a técnicos -->
+    <a href="{{ route('gestor.verIncidenciasTecnico') }}" class="btn btn-primary">Ver Incidencias por Técnico</a>
+    
     @if($incidencias->isEmpty())
         <p>No hay incidencias registradas.</p>
     @else

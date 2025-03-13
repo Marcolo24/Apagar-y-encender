@@ -32,4 +32,10 @@ class Incidencia extends Model
     {
         return $this->belongsTo(Estado::class, 'id_estado'); // Relacionamos con la columna id_estado
     }
+
+    // Relación con el técnico asignado (si existe)
+    public function tecnico()
+    {
+        return $this->belongsTo(User::class, 'id_tecnico');
+    }
 }

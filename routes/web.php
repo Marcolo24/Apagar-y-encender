@@ -46,3 +46,6 @@ Route::middleware(['auth'])->group(function () {
     // Ruta para actualizar la incidencia (estado y prioridad)
     Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class, 'updateIncidencia'])->name('gestor.updateIncidencia');
 });
+
+// Ruta para ver incidencias asignadas a técnicos
+Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'verIncidenciasTecnico'])->name('gestor.verIncidenciasTecnico');
