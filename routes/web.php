@@ -25,7 +25,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
         ->name('dashboard.admin');
-
     
 });
 
