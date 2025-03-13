@@ -11,6 +11,9 @@ use Database\Seeders\EstadoIncidenciaSeeder;
 use Database\Seeders\SedeSeeder;
 use Database\Seeders\EstadoUsuarioSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\SubcategoriaSeeder;
+use Database\Seeders\PrioridadSeeder;
+use Database\Seeders\IncidenciaSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,8 +29,11 @@ class DatabaseSeeder extends Seeder
             SedeSeeder::class,
             EstadoUsuarioSeeder::class,
             CategoriaSeeder::class,
+            SubcategoriaSeeder::class,
+            PrioridadSeeder::class,
             EstadoIncidenciaSeeder::class,
             UserSeeder::class,
+            IncidenciaSeeder::class,
         ]);
 
         User::factory()->create([
