@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('users');
-            $table->unsignedBigInteger('id_tecnico');
+            $table->unsignedBigInteger('id_tecnico')->nullable();
             $table->foreign('id_tecnico')->references('id')->on('users');
             $table->unsignedBigInteger('id_estado');
             $table->foreign('id_estado')->references('id')->on('estado_incidencia');
@@ -28,8 +28,8 @@ return new class extends Migration
             $table->string('titulo');
             $table->string('descripcion');
             $table->timestamp('fecha_inicio');
-            $table->timestamp('fecha_final');
-            $table->string('img');
+            $table->timestamp('fecha_final')->nullable();
+            $table->string('img')->nullable();
         });
 
         Schema::enableForeignKeyConstraints();

@@ -15,7 +15,7 @@ use App\Http\Controllers\AdminController;
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
 
 // Rutas de autenticación
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Ruta del Gestor que muestra las incidencias
@@ -34,12 +34,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/tecnico', [IncidenciaController::class, 'index'])->name('dashboard.tecnico');
 
-    Route::get('/dashboard/gestor', function (Request $request) {
+    /*Route::get('/dashboard/gestor', function (Request $request) {
         if (Auth::user()->id_rol != 3) {
             return redirect()->route('index'); // Redirigir si no es gestor
         }
         return view('dashboard.gestor');
-    })->name('dashboard.gestor');
+    })->name('dashboard.gestor');*/
+
+    Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])->name('dashboard.gestor');
 
     /*Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {

@@ -63,6 +63,11 @@
     border-radius: 15px;
   }
 
+  .btn.disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed;
+  }
+
   .margin0 {
     margin:0;
   }

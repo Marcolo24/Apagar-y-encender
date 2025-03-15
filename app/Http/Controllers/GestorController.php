@@ -6,20 +6,24 @@ use App\Models\Incidencia;
 use App\Models\Prioridad;
 use App\Models\EstadoIncidencia; // Asegúrate de importar el modelo de EstadoIncidencia
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class GestorController extends Controller
 {
     public function showIncidencias()
     {
-        // Obtener todas las incidencias con sus relaciones
-        $incidencias = Incidencia::with('cliente', 'prioridad', 'estado')->get(); // Asegúrate de incluir el estado
+        // Verifica que el usuario autenticado sea un gestor
+        if (Auth::user()->id_rol != 3) {
+            return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
+        }
 
-        // Obtener todas las prioridades y estados para mostrarlas en el formulario de actualización
+        // Obtener incidencias relacionadas con cliente, prioridad y estado
+        $incidencias = Incidencia::with(['cliente', 'prioridad', 'estado'])->get();
         $prioridades = Prioridad::all();
-        $estados = EstadoIncidencia::all(); // Asegúrate de cargar los estados
+        $estados = EstadoIncidencia::all(); 
 
-        // Retornar la vista con los datos
+        // Retornar la vista con las variables necesarias
         return view('dashboard.gestor', compact('incidencias', 'prioridades', 'estados'));
     }
 
