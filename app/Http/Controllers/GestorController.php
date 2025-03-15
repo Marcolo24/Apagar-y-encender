@@ -47,18 +47,33 @@ class GestorController extends Controller
         return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada con éxito.');
     }
 
-    // Método para ver las incidencias de cada técnico
+    // Método para ver las incidencias y asignar técnicos
     public function verIncidenciasTecnico()
     {
-        // Obtener todas las incidencias asignadas a los técnicos
-        $incidenciasAsignadas = Incidencia::whereNotNull('id_tecnico') // Solo las incidencias con técnico asignado
-            ->with('cliente', 'prioridad', 'estado', 'tecnico') // Asegúrate de cargar las relaciones necesarias
-            ->get();
+        // Obtener todas las incidencias, incluyendo las que no tienen técnico asignado
+        $incidenciasAsignadas = Incidencia::with('cliente', 'prioridad', 'estado', 'tecnico')->get();
 
-        // Obtener todos los técnicos (usuarios con rol de técnico, asumiendo que id_rol 2 es el rol de técnico)
+        // Obtener todos los técnicos (usuarios con id_rol = 2)
         $tecnicos = User::where('id_rol', 2)->get();
 
-        // Retornar la vista con las incidencias y los técnicos
         return view('dashboard.incidencias-tecnico', compact('incidenciasAsignadas', 'tecnicos'));
     }
+
+    public function updateTecnico(Request $request, $id)
+    {
+        // Validar que el técnico seleccionado existe y tiene el rol adecuado
+        $request->validate([
+            'id_tecnico' => 'nullable|exists:users,id'
+        ]);
+
+        // Buscar la incidencia
+        $incidencia = Incidencia::findOrFail($id);
+
+        // Asignar el técnico
+        $incidencia->id_tecnico = $request->id_tecnico;
+        $incidencia->save();
+
+        return redirect()->route('gestor.verIncidenciasTecnico')->with('success', 'Técnico asignado correctamente.');
+    }
+
 }

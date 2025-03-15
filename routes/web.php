@@ -66,3 +66,8 @@ Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class
 
 // Ruta para ver incidencias asignadas a técnicos
 Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'verIncidenciasTecnico'])->name('gestor.verIncidenciasTecnico');
+
+// Ruta para actualizar el técnico
+Route::put('/incidencias/{id}/update-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.updateTecnico');
+
+Route::post('/incidencias/{id}/asignar-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.asignar.tecnico');
