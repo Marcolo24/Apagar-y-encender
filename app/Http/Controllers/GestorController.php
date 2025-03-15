@@ -47,18 +47,20 @@ class GestorController extends Controller
         return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada con éxito.');
     }
 
-    // Método para ver las incidencias y asignar técnicos
     public function verIncidenciasTecnico()
     {
+        // Obtener la sede del gestor autenticado
+        $sedeGestor = Auth::user()->id_sede;
+    
         // Obtener todas las incidencias, incluyendo las que no tienen técnico asignado
         $incidenciasAsignadas = Incidencia::with('cliente', 'prioridad', 'estado', 'tecnico')->get();
-
-        // Obtener todos los técnicos (usuarios con id_rol = 2)
-        $tecnicos = User::where('id_rol', 2)->get();
-
+    
+        // Obtener solo los técnicos de la misma sede que el gestor autenticado
+        $tecnicos = User::where('id_rol', 2)->where('id_sede', $sedeGestor)->get();
+    
         return view('dashboard.incidencias-tecnico', compact('incidenciasAsignadas', 'tecnicos'));
     }
-
+    
     public function updateTecnico(Request $request, $id)
     {
         // Validar que el técnico seleccionado existe y tiene el rol adecuado

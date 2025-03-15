@@ -22,7 +22,6 @@
                     <th>Cliente afectado</th>
                     <th>Prioridad</th>
                     <th>Estado</th>
-                    <th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,13 +31,13 @@
                         <td>{{ $incidencia->descripcion }}</td>
                         <td>{{ $incidencia->cliente->name }}</td>
                         
-                        <!-- Desplegable para cambiar la prioridad -->
+                        <!-- Desplegable para cambiar la prioridad (se envía automáticamente) -->
                         <td>
                             <form action="{{ route('gestor.updateIncidencia', $incidencia->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
 
-                                <select name="id_prioridad">
+                                <select name="id_prioridad" onchange="this.form.submit()">
                                     @foreach ($prioridades as $prioridad)
                                         <option value="{{ $prioridad->id }}" 
                                             @if ($incidencia->id_prioridad == $prioridad->id) selected @endif>
@@ -48,9 +47,9 @@
                                 </select>
                         </td>
 
-                        <!-- Desplegable para cambiar el estado -->
+                        <!-- Desplegable para cambiar el estado (se envía automáticamente) -->
                         <td>
-                            <select name="id_estado">
+                            <select name="id_estado" onchange="this.form.submit()">
                                 @foreach ($estados as $estado)
                                     <option value="{{ $estado->id }}" 
                                         @if ($incidencia->id_estado == $estado->id) selected @endif>
@@ -59,12 +58,7 @@
                                 @endforeach
                             </select>
                         </td>
-
-                        <!-- Botón de actualizar -->
-                        <td>
-                            <button type="submit">Actualizar</button>
-                        </form>
-                        </td>
+                    </form>
                     </tr>
                 @endforeach
             </tbody>

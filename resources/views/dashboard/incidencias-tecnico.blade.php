@@ -4,7 +4,7 @@
 
 @section('content')
     <br>
-    <h1>Incidencias asignadas a técnico</h1>
+    <h1>Incidencias Asignadas a cada Técnico</h1>
     
     <!-- Botón para volver a la página del gestor -->
     <a href="{{ route('dashboard.gestor') }}" class="btn btn-secondary">← Volver al Gestor</a>
