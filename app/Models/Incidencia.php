@@ -1,23 +1,33 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User; // 🔹 Importar User
-use App\Models\Prioridad;
+use App\Models\User; // Importar User
+use App\Models\Prioridad; // Importar Prioridad
+use App\Models\Estado; // Importar Estado
 
 class Incidencia extends Model
 {
     use HasFactory;
 
-    protected $table = 'incidencia'; // Nombre real de la tabla en la BD
+    protected $table = 'incidencia'; // Asegúrate de que el nombre de la tabla es correcto
 
     protected $fillable = [
-        'titulo', 'descripcion', 'id_cliente', 'id_tecnico', 'id_estado',
-        'id_subcategoria', 'id_prioridad', 'fecha_inicio', 'fecha_final', 'img'
+        'titulo', 
+        'descripcion', 
+        'id_cliente', 
+        'id_tecnico', 
+        'id_estado',
+        'id_subcategoria', 
+        'id_prioridad', 
+        'fecha_inicio', 
+        'fecha_final', 
+        'img',
     ];
 
-    public $timestamps = false; // No usamos `created_at` y `updated_at`
+    public $timestamps = false;
 
     // Relación con el usuario (cliente)
     public function cliente()
@@ -47,5 +57,11 @@ class Incidencia extends Model
     public function subcategoria()
     {
         return $this->belongsTo(Subcategoria::class, 'id_subcategoria');
+    }
+
+    // Relación con la sede
+    public function sede()
+    {
+        return $this->hasOneThrough(Sede::class, User::class, 'id', 'id', 'id_cliente', 'id_sede');
     }
 }

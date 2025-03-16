@@ -3,8 +3,7 @@
 @section('title', 'Técnico')
 
 @section('content')
-    <h1>Técnico</h1>
-
+<br>
     <table class="table table-striped">
         <thead>
             <tr>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +17,16 @@ use Illuminate\Support\Facades\View;
 Route::get('/', [AuthController::class, 'showLogin'])->name('index');
 
 // Rutas de autenticación
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Ruta del Gestor que muestra las incidencias
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
         ->name('dashboard.gestor');
-
+    
     Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
         ->name('dashboard.admin');
-
     
 });
 
@@ -37,12 +36,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard/tecnico', [IncidenciaController::class, 'index'])->name('dashboard.tecnico');
 
-    Route::get('/dashboard/gestor', function (Request $request) {
+    /*Route::get('/dashboard/gestor', function (Request $request) {
         if (Auth::user()->id_rol != 3) {
             return Redirect::route('index');
         }
-        return View::make('dashboard.gestor');
-    })->name('dashboard.gestor');
+        return view('dashboard.gestor');
+    })->name('dashboard.gestor');*/
+
+    Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])->name('dashboard.gestor');
 
     /*Route::get('/dashboard/cliente', function (Request $request) {
         if (Auth::user()->id_rol != 4) {
@@ -61,4 +62,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/cliente', [ClienteController::class, 'index'])->name('dashboard.cliente');
     Route::put('/incidencias/cerrar/{id}', [ClienteController::class, 'cerrarIncidencia'])->name('incidencias.cerrar');
     Route::post('/incidencias/crear', [ClienteController::class, 'crearIncidencia'])->name('incidencias.crear');
+// Ruta para actualizar la incidencia (estado y prioridad)
+Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class, 'updateIncidencia'])->name('gestor.updateIncidencia');
 });
+
+// Ruta para ver incidencias asignadas a técnicos
+Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'verIncidenciasTecnico'])->name('gestor.verIncidenciasTecnico');
+
+// Ruta para actualizar el técnico
+Route::put('/incidencias/{id}/update-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.updateTecnico');
+
+Route::post('/incidencias/{id}/asignar-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.asignar.tecnico');

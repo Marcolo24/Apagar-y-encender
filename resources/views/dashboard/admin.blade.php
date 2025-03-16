@@ -3,7 +3,8 @@
 @section('title', 'Admin')
 
 @section('content')
-    <h1>Admin</h1>
+    <br>
+
     <table>
         <thead>
             <tr>
@@ -11,8 +12,8 @@
                 <th>Nombre</th>
                 <th>Apellidos</th>
                 <th>Email</th>
-                <th>Rol</th>
                 <th>Sede</th>
+                <th>Rol</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -27,11 +28,14 @@
                     <td>{{ $usuario->rol->nombre }}</td>
                     <td>
                         <a href="">Editar</a>
-                        <a href="">Eliminar</a>
+                        <a href="" id="eliminarUsuario" data-id="{{ $usuario->id }}">Eliminar</a>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+@endsection
 
+@section('scripts')
+    <script src="{{ asset('../js/eliminarUsuarios.js') }}"></script>
 @endsection

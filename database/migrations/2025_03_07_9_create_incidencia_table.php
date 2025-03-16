@@ -17,19 +17,23 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('users');
-            $table->unsignedBigInteger('id_tecnico');
+            
+            // Permitir NULL en id_tecnico
+            $table->unsignedBigInteger('id_tecnico')->nullable();
             $table->foreign('id_tecnico')->references('id')->on('users');
+
             $table->unsignedBigInteger('id_estado');
             $table->foreign('id_estado')->references('id')->on('estado_incidencia');
             $table->unsignedBigInteger('id_subcategoria');
             $table->foreign('id_subcategoria')->references('id')->on('subcategoria');
             $table->unsignedBigInteger('id_prioridad');
             $table->foreign('id_prioridad')->references('id')->on('prioridad');
+            
             $table->string('titulo');
             $table->string('descripcion');
             $table->timestamp('fecha_inicio');
-            $table->timestamp('fecha_final');
-            $table->string('img');
+            $table->timestamp('fecha_final')->nullable();
+            $table->string('img')->nullable();
         });
 
         Schema::enableForeignKeyConstraints();
