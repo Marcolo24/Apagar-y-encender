@@ -49,7 +49,7 @@ class IncidenciaController extends Controller
         $incidencia->id_estado = $estadoResuelta->id;
         $incidencia->save();
 
-        return redirect()->route('dashboard.tecnico')->with('success', 'Incidencia resuelta.');
+        return response()->json(['success' => true, 'message' => 'Incidencia resuelta.']);
     }
 
     public function cerrar($id)

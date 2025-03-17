@@ -62,11 +62,17 @@ function buscarIncidencias() {
                         <td>${incidencia.prioridad.nombre ?? 'N/A'}</td>
                         <td>${incidencia.estado.nombre ?? 'N/A'}</td>
                         <td>
-                            <!-- Aquí puedes agregar los botones de acción -->
+                            ${incidencia.estado.nombre === 'Asignada' ? 
+                                `<button class="btn-accion" data-action="empezar" style="color: blue;">Empezar</button>` : 
+                                `<button class="btn-accion" data-action="resolver" style="color: green;">Resolver</button>
+                                 <button class="btn-accion" data-action="mensaje" style="color: orange;">Enviar Mensaje</button>`
+                            }
                         </td>
                     `;
                     tabla.appendChild(tr);
                 });
+                // Reasignar eventos a los nuevos botones
+                asignarEventosBotones();
             }
         });
 }
@@ -87,7 +93,7 @@ function reiniciarFiltros() {
     buscarIncidencias();
 }
 
-// Ejemplo para filtrarUsuarios.js
+// Asignar eventos al cargar la página
 document.addEventListener("DOMContentLoaded", function() {
     const inputNombre = document.getElementById("inputNombre");
     const inputEstado = document.getElementById("inputEstado");
@@ -106,4 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (btnReiniciarFiltros) {
         btnReiniciarFiltros.addEventListener("click", reiniciarFiltros);
     }
+
+    // Asignar eventos a los botones de acción
+    asignarEventosBotones();
 });
