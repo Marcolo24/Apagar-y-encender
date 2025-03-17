@@ -17,11 +17,13 @@ class AdminController extends Controller
 {
     public function showUsers()
     {
-        // Obtener todos los usuarios y sedes
-        $usuarios = User::with('rol', 'sede')->get();
+        // Obtener solo usuarios activos y sedes
+        $usuarios = User::with('rol', 'sede')
+            ->where('id_estado_usuario', 1)
+            ->get();
         $sedes = Sede::all();
 
-        // Retornar la vista con los datos
+        // Retornar la vista con los datos necesarios
         return view('dashboard.admin', compact('usuarios', 'sedes'));
     }
 
@@ -33,7 +35,8 @@ class AdminController extends Controller
         $orderBy = $request->input('orderBy');
         $orderDirection = $request->input('orderDirection');
         
-        $query = User::with(['rol', 'sede']);
+        $query = User::with(['rol', 'sede'])
+            ->where('id_estado_usuario', 1); // Añadir filtro de estado
 
         if ($nombre) {
             $query->where('name', 'LIKE', "%{$nombre}%");
@@ -73,10 +76,10 @@ class AdminController extends Controller
     {
         try {
             $usuario = User::findOrFail($id);
-            $usuario->delete();
+            $usuario->update(['id_estado_usuario' => 2]);
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error al eliminar el usuario'], 500);
+            return response()->json(['success' => false, 'message' => 'Error al desactivar el usuario'], 500);
         }
     }
 
@@ -119,9 +122,18 @@ class AdminController extends Controller
     public function crearUsuario(Request $request)
     {
         try {
-            Log::info('Datos recibidos:', $request->all());
+            // Verificar si existe un usuario con el mismo correo
+            $existingUser = User::where('correo', $request->email)
+                ->where('id_estado_usuario', 1)
+                ->first();
 
-            // Validación
+            if ($existingUser) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Ya existe un usuario activo con este correo electrónico'
+                ], 422);
+            }
+
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'apellidos' => 'required|string|max:255',
@@ -130,21 +142,14 @@ class AdminController extends Controller
                     'string',
                     'email',
                     'max:255',
-                    'unique:users,correo',
-                    'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/'
+                    'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
                 ],
                 'sede' => 'required|numeric|exists:sede,id',
                 'rol' => 'required|numeric|exists:rol,id',
                 'password' => 'required|string|min:6'
-            ], [
-                'sede.exists' => 'La sede seleccionada no existe',
-                'rol.exists' => 'El rol seleccionado no existe',
-                'email.unique' => 'Este correo ya está registrado',
-                'email.regex' => 'El correo debe ser una dirección de Gmail válida'
             ]);
 
-            // Crear el usuario
-            $usuario = User::create([
+            User::create([
                 'name' => $validatedData['name'],
                 'apellidos' => $validatedData['apellidos'],
                 'email' => $validatedData['email'],
@@ -166,12 +171,6 @@ class AdminController extends Controller
                 'message' => $e->validator->errors()->first()
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Error al crear usuario:', [
-                'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile()
-            ]);
-            
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el usuario: ' . $e->getMessage()
@@ -200,8 +199,6 @@ class AdminController extends Controller
     public function crearCategoria(Request $request)
     {
         try {
-            \Log::info('Datos recibidos en crearCategoria:', $request->all());
-
             $validatedData = $request->validate([
                 'tipo' => 'required|in:categoria,subcategoria',
                 'nombre' => 'required|string|max:255',
@@ -213,41 +210,26 @@ class AdminController extends Controller
             ]);
 
             DB::beginTransaction();
-            try {
-                if ($validatedData['tipo'] === 'categoria') {
-                    $categoria = Categoria::create([
-                        'nombre' => $validatedData['nombre']
-                    ]);
-                } else {
-                    $subcategoria = Subcategoria::create([
-                        'nombre' => $validatedData['nombre'],
-                        'id_categoria' => $validatedData['id_categoria']
-                    ]);
-                }
-                
-                DB::commit();
-                return response()->json([
-                    'success' => true,
-                    'message' => ($validatedData['tipo'] === 'categoria' ? 'Categoría' : 'Subcategoría') . ' creada correctamente'
+            
+            if ($validatedData['tipo'] === 'categoria') {
+                Categoria::create([
+                    'nombre' => $validatedData['nombre']
                 ]);
-
-            } catch (\Exception $e) {
-                DB::rollBack();
-                throw $e;
+            } else {
+                Subcategoria::create([
+                    'nombre' => $validatedData['nombre'],
+                    'id_categoria' => $validatedData['id_categoria']
+                ]);
             }
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Error de validación:', $e->errors());
+            
+            DB::commit();
             return response()->json([
-                'success' => false,
-                'message' => $e->validator->errors()->first()
-            ], 422);
-        } catch (\Exception $e) {
-            \Log::error('Error en crearCategoria:', [
-                'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'success' => true,
+                'message' => ($validatedData['tipo'] === 'categoria' ? 'Categoría' : 'Subcategoría') . ' creada correctamente'
             ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear la categoría: ' . $e->getMessage()
