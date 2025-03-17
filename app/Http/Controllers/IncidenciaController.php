@@ -60,4 +60,12 @@ class IncidenciaController extends Controller
         // Implementa la lógica para enviar un mensaje al cliente
         return view('incidencias.mensaje', compact('id'));
     }
+
+    public function enviarMensaje(Request $request, $id)
+    {
+        // Lógica para enviar el mensaje al cliente
+        // Podrías guardar el mensaje en la base de datos o enviarlo por correo electrónico
+
+        return redirect()->route('dashboard.tecnico')->with('success', 'Mensaje enviado.');
+    }
 }
