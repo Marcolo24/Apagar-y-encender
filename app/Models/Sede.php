@@ -11,6 +11,10 @@ class Sede extends Model
 
     protected $table = 'sede';
 
+    protected $fillable = [
+        'nombre'
+    ];
+
     public function users()
     {
         return $this->hasMany(User::class, 'id_sede');
