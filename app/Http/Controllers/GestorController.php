@@ -13,37 +13,45 @@ class GestorController extends Controller
 {
     public function showIncidencias(Request $request)
     {
-        // Verifica que el usuario autenticado sea un gestor
         if (Auth::user()->id_rol != 3) {
             return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
         }
     
-        // Obtener todas las prioridades y estados
+        // Obtener filtros
+        $filtroPrioridad = $request->input('filtro_prioridad');
+        $filtroTecnico = $request->input('filtro_tecnico');
+        $filtroFecha = $request->input('filtro_fecha', 'asc');
+    
+        // Obtener prioridades, estados y técnicos
         $prioridades = Prioridad::all();
         $estados = EstadoIncidencia::all();
+        $tecnicos = User::where('id_rol', 2)->where('id_sede', Auth::user()->id_sede)->get();
     
-        // Obtener el filtro de prioridad de la solicitud
-        $filtroPrioridad = $request->input('filtro_prioridad');
-        
-        // Obtener el filtro de fecha de la solicitud
-        $filtroFecha = $request->input('filtro_fecha', 'asc'); // Por defecto 'asc'
+        // Obtener estado "Cerrada"
+        $estadoCerrada = EstadoIncidencia::where('nombre', 'Cerrada')->first();
     
-        // Consulta de incidencias con filtro por prioridad
-        $query = Incidencia::with(['cliente', 'prioridad', 'estado', 'tecnico']);
+        // Consulta de incidencias
+        $query = Incidencia::with(['cliente', 'prioridad', 'estado', 'tecnico'])
+            ->when($estadoCerrada, function ($query) use ($estadoCerrada) {
+                return $query->where('id_estado', '!=', $estadoCerrada->id);
+            });
     
+        // Aplicar filtro por prioridad
         if (!empty($filtroPrioridad)) {
             $query->where('id_prioridad', $filtroPrioridad);
         }
     
-        // Ordenar las incidencias por fecha
-        $incidencias = $query->orderBy('fecha_inicio', $filtroFecha)->get();
+        // Aplicar filtro por técnico
+        if (!empty($filtroTecnico)) {
+            $query->where('id_tecnico', $filtroTecnico);
+        }
     
-        // Obtener todos los técnicos de la sede del gestor autenticado
-        $tecnicos = User::where('id_rol', 2)->where('id_sede', Auth::user()->id_sede)->get();
+        // Ordenar por fecha
+        $incidencias = $query->orderBy('fecha_inicio', $filtroFecha)->get();
     
         return view('dashboard.gestor', compact('incidencias', 'prioridades', 'estados', 'tecnicos'));
     }
-                
+                        
     // Método para actualizar estado y prioridad de la incidencia
     public function updateIncidencia(Request $request, $id)
     {

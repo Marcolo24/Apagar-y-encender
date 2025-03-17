@@ -8,7 +8,7 @@
 
     <br>
 
-    <!-- Filtro por prioridad y fecha -->
+    <!-- Filtro por prioridad, técnico y fecha -->
     <form method="GET" action="{{ route('dashboard.gestor') }}" style="display: flex; align-items: center; gap: 10px;">
         <div>
             <label for="filtro_prioridad"><strong>Filtrar por prioridad:</strong></label>
@@ -18,6 +18,19 @@
                     <option value="{{ $prioridad->id }}" 
                         {{ request('filtro_prioridad') == $prioridad->id ? 'selected' : '' }}>
                         {{ $prioridad->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label for="filtro_tecnico"><strong>Filtrar por técnico:</strong></label>
+            <select name="filtro_tecnico" id="filtro_tecnico" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                @foreach ($tecnicos as $tecnico)
+                    <option value="{{ $tecnico->id }}" 
+                        {{ request('filtro_tecnico') == $tecnico->id ? 'selected' : '' }}>
+                        {{ $tecnico->name }}
                     </option>
                 @endforeach
             </select>
@@ -45,7 +58,7 @@
                 <th>Cliente afectado</th>
                 <th>Prioridad</th>
                 <th>Estado</th>
-                <th>Técnico Asignado</th> <!-- Nueva columna -->
+                <th>Técnico Asignado</th>
                 <th>Fecha de Inicio</th>
             </tr>
         </thead>
@@ -56,7 +69,6 @@
                     <td>{{ $incidencia->descripcion }}</td>
                     <td>{{ $incidencia->cliente->name }}</td>
                     
-                    <!-- Selección de prioridad -->
                     <td>
                     <form action="{{ route('gestor.updateIncidencia', $incidencia->id) }}" method="POST">
                         @csrf
@@ -69,9 +81,9 @@
                                 </option>
                             @endforeach
                         </select>
+                    </form>
                     </td>
     
-                    <!-- Selección de estado -->
                     <td>
                         <form action="{{ route('gestor.updateIncidencia', $incidencia->id) }}" method="POST">
                             @csrf
@@ -87,24 +99,24 @@
                         </form>
                     </td>
     
-                <!-- Selección de técnico asignado -->
-                <td>
-                    <form action="{{ route('incidencias.updateTecnico', $incidencia->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <select name="id_tecnico" onchange="this.form.submit()">
-                            <option value="">No asignado</option>
-                            @foreach ($tecnicos as $tecnico)
-                                <option value="{{ $tecnico->id }}" {{ $incidencia->id_tecnico == $tecnico->id ? 'selected' : '' }}>
-                                    {{ $tecnico->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
-                </td>
+                    <td>
+                        <form action="{{ route('incidencias.updateTecnico', $incidencia->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <select name="id_tecnico" onchange="this.form.submit()">
+                                <option value="">No asignado</option>
+                                @foreach ($tecnicos as $tecnico)
+                                    <option value="{{ $tecnico->id }}" 
+                                        {{ $incidencia->id_tecnico == $tecnico->id ? 'selected' : '' }}>
+                                        {{ $tecnico->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </td>
 
-                <td>{{ $incidencia->fecha_inicio }}</td>
-            </tr>
+                    <td>{{ $incidencia->fecha_inicio }}</td>
+                </tr>
             @endforeach
         </tbody>
     </table>
