@@ -29,22 +29,28 @@ class GestorController extends Controller
     // Método para actualizar estado y prioridad de la incidencia
     public function updateIncidencia(Request $request, $id)
     {
+        // Obtener la incidencia
         $incidencia = Incidencia::findOrFail($id);
-
-        // Validación de los campos
-        $request->validate([
+    
+        // Validar los datos recibidos (puedes agregar validaciones si es necesario)
+        $data = $request->validate([
             'id_prioridad' => 'required|exists:prioridad,id',
             'id_estado' => 'required|exists:estado_incidencia,id',
         ]);
-
-        // Actualizar prioridad y estado
-        $incidencia->id_prioridad = $request->input('id_prioridad');
-        $incidencia->id_estado = $request->input('id_estado');
-        $incidencia->save();
-
-        return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada con éxito.');
+    
+        // Verificar si el estado ha cambiado
+        if ($incidencia->id_estado != $data['id_estado']) {
+            // Si el estado cambia, eliminamos el técnico asignado
+            $incidencia->id_tecnico = null;
+        }
+    
+        // Actualizar los campos de la incidencia
+        $incidencia->update($data);
+    
+        // Redirigir al gestor con un mensaje de éxito
+        return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada correctamente');
     }
-
+    
     public function verIncidenciasTecnico()
     {
         // Obtener la sede del gestor autenticado
