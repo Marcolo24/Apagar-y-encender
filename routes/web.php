@@ -62,7 +62,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/incidencias/crear', [ClienteController::class, 'crearIncidencia'])->name('incidencias.crear');
 // Ruta para actualizar la incidencia (estado y prioridad)
 Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class, 'updateIncidencia'])->name('gestor.updateIncidencia');
+
+    // Dentro del grupo de rutas con middleware auth
+    Route::get('/incidencias/{id}/detalle', [ClienteController::class, 'detalleIncidencia'])
+        ->name('incidencias.detalle');
 });
 
 // Ruta para ver incidencias asignadas a técnicos
 Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'verIncidenciasTecnico'])->name('gestor.verIncidenciasTecnico');
+
+Route::get('/dashboard/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');

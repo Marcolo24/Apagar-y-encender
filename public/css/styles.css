@@ -231,3 +231,19 @@
     background-color: #f5f5f5;
   }
   
+  /* Reduce espacio entre elementos del filtro */
+#filtrosForm .form-check {
+  margin-bottom: 0;
+}
+
+/* Ajusta la alineación y elimina el espacio extra entre el switch y el botón */
+#ocultar_resueltas {
+  margin-right: 5px;
+}
+
+/* En tu archivo CSS o dentro de una etiqueta <style> en el blade */
+.error-message {
+  font-size: 0.875em;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}

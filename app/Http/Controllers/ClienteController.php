@@ -33,31 +33,34 @@ class ClienteController extends Controller
         })->get();
     
         $prioridades = Prioridad::all();
+        $estados = EstadoIncidencia::all();
     
         // Construcción de la consulta para incidencias del cliente
         $query = Incidencia::where('id_cliente', $cliente->id)
                             ->with(['estado', 'prioridad', 'subcategoria']);
     
-        // Filtro de estado si se solicita
-        if ($request->has('estado')) {
+        // Filtro por estado
+        if ($request->has('estado') && $request->estado != '') {
             $query->whereHas('estado', function ($q) use ($request) {
                 $q->where('nombre', $request->estado);
             });
         }
     
-        // Ocultar incidencias resueltas si el usuario lo desea
-        if ($request->has('ocultar_resueltas') && $request->ocultar_resueltas) {
+        // Ocultar incidencias resueltas si se solicita
+        if ($request->has('ocultar_resueltas') && $request->ocultar_resueltas == '1') {
             $query->whereHas('estado', function ($q) {
-                $q->where('nombre', '!=', 'Resuelta');
+                $q->where('nombre', '!=', 'Resuelta')
+                  ->where('nombre', '!=', 'Cerrada');
             });
         }
     
-        // Ordenar por fecha de inicio
-        $query->orderBy('fecha_inicio', $request->get('orden', 'desc'));
+        // Ordenar por fecha
+        $orden = $request->get('orden', 'desc');
+        $query->orderBy('fecha_inicio', $orden);
     
         $incidencias = $query->get();
     
-        return view('dashboard.cliente', compact('incidencias', 'prioridades', 'subcategorias'));
+        return view('dashboard.cliente', compact('incidencias', 'prioridades', 'subcategorias', 'estados', 'orden'));
     }    
 
     public function cerrarIncidencia($id)
@@ -114,7 +117,7 @@ class ClienteController extends Controller
         if ($request->hasFile('img')) {
             $imagen = $request->file('img');
             $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-            $rutaImagen = $imagen->storeAs('public/incidencias', $nombreImagen);
+            $rutaImagen = $imagen->storeAs('public/img', $nombreImagen);
         }
 
         $incidencia = Incidencia::create([
@@ -139,9 +142,43 @@ class ClienteController extends Controller
     {
         $incidencia = Incidencia::where('id', $id)
             ->where('id_cliente', Auth::id())
-            ->with(['estado', 'prioridad', 'subcategoria'])
+            ->with(['estado', 'prioridad', 'subcategoria.categoria', 'tecnico'])
             ->firstOrFail();
 
         return view('dashboard.detalle-incidencia', compact('incidencia'));
+    }
+
+    public function filtrar(Request $request)
+    {
+        $cliente = Auth::user();
+        $query = Incidencia::where('id_cliente', $cliente->id)
+                            ->with(['estado', 'prioridad', 'subcategoria']);
+
+        // Filtro por estado
+        if ($request->has('estado') && $request->estado != '') {
+            $query->whereHas('estado', function ($q) use ($request) {
+                $q->where('nombre', $request->estado);
+            });
+        }
+
+        // Ocultar resueltas
+        if ($request->has('ocultar_resueltas') && $request->ocultar_resueltas == '1') {
+            $query->whereHas('estado', function ($q) {
+                $q->where('nombre', '!=', 'Resuelta')
+                  ->where('nombre', '!=', 'Cerrada');
+            });
+        }
+
+        // Ordenar por fecha
+        $orden = $request->get('orden', 'desc');
+        $query->orderBy('fecha_inicio', $orden);
+
+        $incidencias = $query->get();
+
+        if ($request->ajax()) {
+            return view('partials.incidencias-table', compact('incidencias'));
+        }
+
+        return response()->json(['incidencias' => $incidencias]);
     }
 }
