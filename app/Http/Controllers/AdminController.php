@@ -5,6 +5,8 @@ use App\Models\User;
 use App\Models\Sede;
 use App\Models\Location;
 use App\Models\Rol;
+use App\Models\Categoria;
+use App\Models\Subcategoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -173,6 +175,82 @@ class AdminController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al crear el usuario: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCategorias()
+    {
+        try {
+            // Solo obtener categorías principales (no subcategorías)
+            $categorias = Categoria::all(['id', 'nombre']);
+            
+            return response()->json([
+                'success' => true,
+                'categorias' => $categorias
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener las categorías: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function crearCategoria(Request $request)
+    {
+        try {
+            \Log::info('Datos recibidos en crearCategoria:', $request->all());
+
+            $validatedData = $request->validate([
+                'tipo' => 'required|in:categoria,subcategoria',
+                'nombre' => 'required|string|max:255',
+                'id_categoria' => 'nullable|required_if:tipo,subcategoria|exists:categoria,id'
+            ], [
+                'id_categoria.required_if' => 'Debe seleccionar una categoría padre para crear una subcategoría',
+                'id_categoria.exists' => 'La categoría padre seleccionada no existe',
+                'nombre.required' => 'El nombre es obligatorio'
+            ]);
+
+            DB::beginTransaction();
+            try {
+                if ($validatedData['tipo'] === 'categoria') {
+                    $categoria = Categoria::create([
+                        'nombre' => $validatedData['nombre']
+                    ]);
+                } else {
+                    $subcategoria = Subcategoria::create([
+                        'nombre' => $validatedData['nombre'],
+                        'id_categoria' => $validatedData['id_categoria']
+                    ]);
+                }
+                
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'message' => ($validatedData['tipo'] === 'categoria' ? 'Categoría' : 'Subcategoría') . ' creada correctamente'
+                ]);
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                throw $e;
+            }
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Error de validación:', $e->errors());
+            return response()->json([
+                'success' => false,
+                'message' => $e->validator->errors()->first()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Error en crearCategoria:', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al crear la categoría: ' . $e->getMessage()
             ], 500);
         }
     }

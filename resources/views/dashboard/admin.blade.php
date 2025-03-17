@@ -3,6 +3,8 @@
 @section('title', 'Admin')
 
 @section('content')
+    <!-- Añadir el meta tag para CSRF -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <br>
     <h1>Gestión de usuarios</h1>
     <div id="divFiltrosUsuario" class="d-flex justify-content-between align-items-center">
@@ -32,7 +34,7 @@
         </div>
         <div class="d-flex gap-3" id="divBtns">
             <button class="btn btn-primary" id="btnCrearUsuario">Crear usuario</button>
-            <button class="btn btn-danger">Crear tipo de incidencia</button>
+            <button class="btn btn-danger" id="btnCrearCategoria">Crear categoría</button>
         </div>
     </div>
 
@@ -107,4 +109,5 @@
     <script src="{{ asset('../js/editarUsuarios.js') }}"></script>
     <script src="{{ asset('../js/crearUsuarios.js') }}"></script>
     <script src="{{ asset('../js/filtrarUsuarios.js') }}"></script>
+    <script src="{{ asset('../js/crearCategorias.js') }}"></script>
 @endsection
