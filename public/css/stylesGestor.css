@@ -19,39 +19,44 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Contenedor del formulario de filtros */
+/* Contenedor del formulario de filtros en una sola línea con menos altura */
 form {
     display: flex;
     justify-content: center;
+    align-items: center; /* Centrar verticalmente */
+    flex-wrap: wrap; /* Ajuste en pantallas pequeñas */
     gap: 10px;
     background: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    padding: 5px 15px; /* Menos padding para reducir altura */
+    border-radius: 6px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
     margin: 0 auto;
 }
 
-/* Estilos para los select y labels (más pequeños) */
+/* Ajuste de los filtros */
 form div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 12px; /* Tamaño más pequeño */
+    font-size: 12px;
+    white-space: nowrap; /* Evita saltos de línea */
 }
 
 form select {
-    padding: 4px;
+    padding: 3px 6px; /* Padding reducido */
     border-radius: 4px;
     border: 1px solid #ccc;
-    font-size: 12px; /* Tamaño reducido */
+    font-size: 12px;
     cursor: pointer;
+    min-width: 130px; /* Tamaño más compacto */
+    height: 25px; /* Menos altura */
 }
 
 /* Tabla de incidencias */
 table {
-    width: 98%; /* Ocupa casi todo el ancho con un pequeño margen */
-    margin: 20px auto;
+    width: 98%;
+    margin: 15px auto; /* Reducir margen para compactar */
     border-collapse: collapse;
     background: #fff;
     border-radius: 8px;
@@ -61,35 +66,46 @@ table {
 
 /* Ajuste del ancho de columnas */
 th, td {
-    padding: 12px;
+    padding: 10px; /* Reducir padding */
     border: 1px solid #ddd;
     text-align: left;
 }
 
+/* Estilo para los títulos de las columnas */
 th {
     background-color: #007bff;
-    color: white;
+    color: black;
+    font-weight: bold;
 }
 
 /* Hacer que la columna de "Incidencia" sea más ancha */
 th:first-child, td:first-child {
-    width: 30%; /* Ajusta según necesidad */
+    width: 30%;
 }
 
 /* Estilos para los select dentro de la tabla */
 td form select {
     width: 100%;
-    padding: 5px;
+    padding: 4px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 12px; /* Más compacto */
+    height: 28px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     form {
-        flex-direction: column;
-        align-items: center;
-        max-width: 90%;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+
+    form div {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
     }
 
     table {

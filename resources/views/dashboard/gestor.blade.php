@@ -5,7 +5,7 @@
 
 @section('content')
     <br>
-    <h1>Todas las incidencias</h1>
+    <h1>Todas las incidencias:</h1>
 
     <br>
 
@@ -60,7 +60,7 @@
                 <th>Prioridad</th>
                 <th>Estado</th>
                 <th>Técnico Asignado</th>
-                <th>Fecha de Inicio</th>
+                <th>Fecha de Creación</th>
             </tr>
         </thead>
         <tbody>
