@@ -58,28 +58,24 @@ class GestorController extends Controller
         // Obtener la incidencia
         $incidencia = Incidencia::findOrFail($id);
     
-        // Validar los datos recibidos (puedes agregar validaciones si es necesario)
+        // Validar los datos recibidos
         $data = $request->validate([
             'id_prioridad' => 'required|exists:prioridad,id',
             'id_estado' => 'required|exists:estado_incidencia,id',
         ]);
     
-        // Verificar si el estado ha cambiado
-        if ($incidencia->id_estado != $data['id_estado']) {
-            // Si el estado cambia a "Sin asignar", eliminamos el técnico asignado
-            $estadoSinAsignar = EstadoIncidencia::where('nombre', 'Sin asignar')->first();
-            if ($data['id_estado'] == $estadoSinAsignar->id) {
-                $incidencia->id_tecnico = null; // Eliminar el técnico
-            }
+        // Verificar si el estado ha cambiado a "Sin asignar"
+        $estadoSinAsignar = EstadoIncidencia::where('nombre', 'Sin asignar')->first();
+        if ($estadoSinAsignar && $data['id_estado'] == $estadoSinAsignar->id) {
+            $incidencia->id_tecnico = null; // Eliminar el técnico asignado
         }
     
-        // Actualizar los campos de la incidencia
+        // Actualizar los datos
         $incidencia->update($data);
-    
-        // Redirigir al gestor con un mensaje de éxito
-        return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada correctamente');
-    }
         
+        return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada correctamente.');
+    }
+            
     public function verIncidenciasTecnico()
     {
         // Obtener la sede del gestor autenticado
@@ -96,31 +92,33 @@ class GestorController extends Controller
     
     public function updateTecnico(Request $request, $id)
     {
-        // Validar que el técnico seleccionado existe o sea null
+        // Validar el técnico (puede ser null)
         $request->validate([
             'id_tecnico' => 'nullable|exists:users,id'
         ]);
     
-        // Buscar la incidencia
+        // Obtener la incidencia
         $incidencia = Incidencia::findOrFail($id);
     
-        // Asignar el técnico
+        // Asignar el técnico o eliminarlo si es null
         $incidencia->id_tecnico = $request->id_tecnico;
     
-        // Si se asigna un técnico, cambiar el estado a "Asignada"
-        if ($request->id_tecnico) {
-            $estadoAsignada = EstadoIncidencia::where('nombre', 'Asignada')->first();
-            if ($estadoAsignada) {
-                $incidencia->id_estado = $estadoAsignada->id;
-            }
-        } else {
-            // Si no se asigna ningún técnico, el estado se puede establecer en un valor predeterminado o vacío, si lo deseas
-            $incidencia->id_estado = null;  // O cualquier estado que sea apropiado cuando no hay técnico
+        // Obtener estados
+        $estadoAsignada = EstadoIncidencia::where('nombre', 'Asignada')->first();
+        $estadoSinAsignar = EstadoIncidencia::where('nombre', 'Sin asignar')->first();
+    
+        // Si hay un técnico, cambia el estado a "Asignada"
+        if ($request->id_tecnico && $estadoAsignada) {
+            $incidencia->id_estado = $estadoAsignada->id;
+        }
+        // Si no hay técnico, cambia el estado a "Sin asignar"
+        elseif (!$request->id_tecnico && $estadoSinAsignar) {
+            $incidencia->id_estado = $estadoSinAsignar->id;
         }
     
         $incidencia->save();
     
-        // Redirigir de nuevo al gestor con el mensaje de éxito
-        return redirect()->route('dashboard.gestor')->with('success', 'Técnico asignado correctamente.');
+        return redirect()->route('dashboard.gestor')->with('success', 'Técnico actualizado correctamente.');
     }
-    }
+
+}

@@ -1,4 +1,5 @@
 @extends('layout.layout')
+<link rel="stylesheet" href="{{ asset('css/stylesGestor.css') }}">
 
 @section('title', 'Gestor')
 
@@ -98,7 +99,22 @@
                             </select>
                         </form>
                     </td>
-    
+                    
+                    {{-- JS PARA QUE SI PONGO SIN ASIGNAR A UNA INCIDENCIA YA NO HAYA TECNICO RESPONSABLE --}}
+                    <script>
+                        document.querySelectorAll('select[name="id_estado"]').forEach(select => {
+                            select.addEventListener('change', function() {
+                                if (this.options[this.selectedIndex].text === 'Sin asignar') {
+                                    let tecnicoSelect = this.closest('tr').querySelector('select[name="id_tecnico"]');
+                                    if (tecnicoSelect) {
+                                        tecnicoSelect.value = ''; // Eliminar técnico
+                                        tecnicoSelect.form.submit(); // Enviar formulario automáticamente
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                    
                     <td>
                         <form action="{{ route('incidencias.updateTecnico', $incidencia->id) }}" method="POST">
                             @csrf
