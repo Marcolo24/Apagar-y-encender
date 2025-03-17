@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use App\Models\EstadoIncidencia;
+use App\Models\Prioridad;
 
 class IncidenciaController extends Controller
 {
     public function index()
     {
         $incidencias = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad'])->get();
-        return view('dashboard.tecnico', compact('incidencias'));
+        $prioridades = Prioridad::all();
+        $estados = EstadoIncidencia::all();
+
+        return view('dashboard.tecnico', compact('incidencias', 'prioridades', 'estados'));
     }
 
     // Métodos para las acciones
@@ -35,7 +39,7 @@ class IncidenciaController extends Controller
         $incidencia->id_estado = $estadoEnTrabajo->id;
         $incidencia->save();
 
-        return redirect()->route('dashboard.tecnico')->with('success', 'Incidencia comenzada.');
+        return response()->json(['success' => true, 'message' => 'Incidencia comenzada.']);
     }
 
     public function resolver($id)
@@ -68,4 +72,24 @@ class IncidenciaController extends Controller
 
         return redirect()->route('dashboard.tecnico')->with('success', 'Mensaje enviado.');
     }
+
+    public function buscarIncidencias(Request $request){
+    $query = Incidencia::with(['cliente', 'estado', 'prioridad']);
+
+    if ($request->filled('nombre')) {
+        $query->where('titulo', 'like', '%' . $request->nombre . '%');
+    }
+
+    if ($request->filled('estado')) {
+        $query->where('id_estado', $request->estado);
+    }
+
+    if ($request->filled('prioridad')) {
+        $query->where('id_prioridad', $request->prioridad);
+    }
+
+    $incidencias = $query->orderBy($request->orderBy, $request->orderDirection)->get();
+
+    return response()->json($incidencias);
+}
 }
