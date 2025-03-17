@@ -46,6 +46,13 @@ Route::middleware(['auth'])->group(function () {
     // Nueva ruta para crear usuarios
     Route::post('/dashboard/admin/crear-usuario', [AdminController::class, 'crearUsuario'])
         ->name('dashboard.admin.crear-usuario');
+
+    // Rutas para categorías
+    Route::get('/dashboard/admin/get-categorias', [AdminController::class, 'getCategorias'])
+        ->name('dashboard.admin.get-categorias');
+    
+    Route::post('/dashboard/admin/crear-categoria', [AdminController::class, 'crearCategoria'])
+        ->name('dashboard.admin.crear-categoria');
 });
 
 // Rutas protegidas por autenticación y roles
