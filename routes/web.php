@@ -23,9 +23,36 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
         ->name('dashboard.gestor');
     
+    // Ruta del Admin que muestra los usuarios
     Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
         ->name('dashboard.admin');
+
+    // Buscar usuarios con fetch 
+    Route::get('/dashboard/admin/buscar-usuarios', [AdminController::class, 'buscarUsuarios'])
+        ->name('dashboard.admin.buscar-usuarios');  
+
+    // Nueva ruta para eliminar usuarios
+    Route::delete('/dashboard/admin/eliminar-usuario/{id}', [AdminController::class, 'eliminarUsuario'])
+        ->name('dashboard.admin.eliminar-usuario');
+
+    // Ruta para obtener sedes y roles
+    Route::get('/dashboard/admin/get-sedes-roles', [AdminController::class, 'getSedesRoles'])
+        ->name('dashboard.admin.get-sedes-roles');
+
+    // Nueva ruta para editar usuarios
+    Route::put('/dashboard/admin/editar-usuario/{id}', [AdminController::class, 'editarUsuario'])
+        ->name('dashboard.admin.editar-usuario');
+
+    // Nueva ruta para crear usuarios
+    Route::post('/dashboard/admin/crear-usuario', [AdminController::class, 'crearUsuario'])
+        ->name('dashboard.admin.crear-usuario');
+
+    // Rutas para categorías
+    Route::get('/dashboard/admin/get-categorias', [AdminController::class, 'getCategorias'])
+        ->name('dashboard.admin.get-categorias');
     
+    Route::post('/dashboard/admin/crear-categoria', [AdminController::class, 'crearCategoria'])
+        ->name('dashboard.admin.crear-categoria');
 });
 
 // Rutas protegidas por autenticación y roles
@@ -70,5 +97,10 @@ Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class
 
 // Ruta para ver incidencias asignadas a técnicos
 Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'verIncidenciasTecnico'])->name('gestor.verIncidenciasTecnico');
+
+// Ruta para actualizar el técnico
+Route::put('/incidencias/{id}/update-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.updateTecnico');
+
+Route::post('/incidencias/{id}/asignar-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.asignar.tecnico');
 
 Route::get('/dashboard/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');
