@@ -30,53 +30,6 @@ function ordenarTabla(columna) {
     buscarIncidencias();
 }
 
-// Función para buscar incidencias
-function buscarIncidencias() {
-    let nombre = document.getElementById('inputNombre').value;
-    let estado = document.getElementById('inputEstado').value;
-    let prioridad = document.getElementById('inputPrioridad').value;
-
-    let url = `/dashboard/tecnico/buscar-incidencias?nombre=${nombre}&estado=${estado}&prioridad=${prioridad}&orderBy=${currentOrderBy}&orderDirection=${currentOrderDirection}`;
-    let tabla = document.getElementById('tabla-incidencias');
-    let thead = tabla.parentElement.querySelector('thead');
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            tabla.innerHTML = "";
-            if (data.length === 0) {
-                thead.style.display = 'none';
-                let p = document.createElement('p');
-                p.textContent = "No se encontraron resultados.";
-                tabla.appendChild(p);
-            } else {
-                if (thead) {
-                    thead.style.display = '';
-                }
-                data.forEach(incidencia => {
-                    let tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${incidencia.titulo}</td>
-                        <td>${incidencia.descripcion}</td>
-                        <td>${incidencia.cliente.name ?? 'N/A'}</td>
-                        <td>${incidencia.prioridad.nombre ?? 'N/A'}</td>
-                        <td>${incidencia.estado.nombre ?? 'N/A'}</td>
-                        <td>
-                            ${incidencia.estado.nombre === 'Asignada' ? 
-                                `<button class="btn-accion" data-action="empezar" style="color: blue;">Empezar</button>` : 
-                                `<button class="btn-accion" data-action="resolver" style="color: green;">Resolver</button>
-                                 <button class="btn-accion" data-action="mensaje" style="color: orange;">Enviar Mensaje</button>`
-                            }
-                        </td>
-                    `;
-                    tabla.appendChild(tr);
-                });
-                // Reasignar eventos a los nuevos botones
-                asignarEventosBotones();
-            }
-        });
-}
-
 // Función para reiniciar los filtros
 function reiniciarFiltros() {
     document.getElementById('inputNombre').value = '';

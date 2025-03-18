@@ -8,12 +8,12 @@ function asignarEventosBotones() {
         button.addEventListener('click', function() {
             const action = this.getAttribute('data-action');
             const id = this.closest('tr').getAttribute('data-id');
-            realizarAccion(action, id, this);
+            realizarAccion(action, id);
         });
     });
 }
 
-function realizarAccion(action, id, button) {
+function realizarAccion(action, id) {
     let method = 'GET';
     let url = `/incidencias/${action}/${id}`;
 
@@ -39,29 +39,13 @@ function realizarAccion(action, id, button) {
     })
     .then(data => {
         if (data.success) {
-            // Actualizar el estado de la tabla
-            buscarIncidencias(); // Llama a la función que actualiza la tabla
+            // Actualizar toda la tabla después de una acción exitosa
+            buscarIncidencias();
         } else {
             console.error('Error al realizar la acción.');
         }
     })
     .catch(error => console.error('Error:', error));
-}
-
-function actualizarBotones(action, button) {
-    const tdAccion = button.closest('td');
-    if (action === 'empezar') {
-        // Cambiar el botón "Empezar" por "Resolver" y "Enviar Mensaje"
-        tdAccion.innerHTML = `
-            <button class="btn-accion" data-action="resolver" style="color: green;">Resolver</button>
-            <button class="btn-accion" data-action="mensaje" style="color: orange;">Enviar Mensaje</button>
-        `;
-    } else if (action === 'resolver') {
-        // Opcional: Cambiar el estado o eliminar botones si es necesario
-        tdAccion.innerHTML = `<span>Resuelta</span>`;
-    }
-    // Reasignar eventos a los nuevos botones
-    asignarEventosBotones();
 }
 
 function buscarIncidencias() {
@@ -88,6 +72,7 @@ function buscarIncidencias() {
                 }
                 data.forEach(incidencia => {
                     let tr = document.createElement('tr');
+                    tr.setAttribute('data-id', incidencia.id);
                     tr.innerHTML = `
                         <td>${incidencia.titulo}</td>
                         <td>${incidencia.descripcion}</td>
@@ -95,11 +80,19 @@ function buscarIncidencias() {
                         <td>${incidencia.prioridad.nombre ?? 'N/A'}</td>
                         <td>${incidencia.estado.nombre ?? 'N/A'}</td>
                         <td>
-                            <!-- Aquí puedes agregar los botones de acción -->
+                            ${incidencia.estado.nombre === 'Asignada' ? 
+                                `<button class="btn-accion" data-action="empezar" style="color: blue;">Empezar</button>` : 
+                                incidencia.estado.nombre === 'En trabajo' ? 
+                                `<button class="btn-accion" data-action="resolver" style="color: green;">Resolver</button>` : 
+                                incidencia.estado.nombre === 'Resuelta' ? 
+                                `<p>Resuelta</p>` : 
+                                ''}
                         </td>
                     `;
                     tabla.appendChild(tr);
                 });
+                // Reasignar eventos a los nuevos botones
+                asignarEventosBotones();
             }
         });
 }
