@@ -9,6 +9,8 @@ use App\Http\Controllers\GestorController;
 use App\Http\Controllers\IncidenciaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 
 // Página de inicio con el formulario de login
@@ -22,7 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/gestor', [GestorController::class, 'showIncidencias'])
         ->name('dashboard.gestor');
-    
+
     // Ruta del Admin que muestra los usuarios
     Route::get('/dashboard/admin', [AdminController::class, 'showUsers'])
         ->name('dashboard.admin');
@@ -63,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
     /*Route::get('/dashboard/gestor', function (Request $request) {
         if (Auth::user()->id_rol != 3) {
-            return redirect()->route('index'); // Redirigir si no es gestor
+            return Redirect::route('index');
         }
         return view('dashboard.gestor');
     })->name('dashboard.gestor');*/
@@ -81,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/incidencia/asignar/{id}', [IncidenciaController::class, 'asignar'])->name('incidencia.asignar');
     Route::get('/incidencia/desasignar/{id}', [IncidenciaController::class, 'desasignar'])->name('incidencia.desasignar');
     Route::get('/incidencias/empezar/{id}', [IncidenciaController::class, 'empezar'])->name('incidencias.empezar');
-    Route::get('/incidencias/resolver/{id}', [IncidenciaController::class, 'resolver'])->name('incidencias.resolver');
+    Route::post('/incidencias/resolver/{id}', [IncidenciaController::class, 'resolver'])->name('incidencias.resolver');
     Route::get('/incidencias/mensaje/{id}', [IncidenciaController::class, 'mensaje'])->name('incidencias.mensaje');
 
     Route::get('/dashboard/cliente', [ClienteController::class, 'index'])->name('dashboard.cliente');
@@ -104,3 +106,5 @@ Route::put('/incidencias/{id}/update-tecnico', [GestorController::class, 'update
 Route::post('/incidencias/{id}/asignar-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.asignar.tecnico');
 
 Route::get('/dashboard/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');
+
+Route::get('/dashboard/tecnico/buscar-incidencias', [IncidenciaController::class, 'buscarIncidencias']);

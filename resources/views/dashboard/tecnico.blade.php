@@ -4,6 +4,37 @@
 
 @section('content')
 <br>
+    <!-- Filtros y Botones de Acción -->
+    <div id="divFiltrosUsuario" class="d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-3">
+            <div>
+                <input type="text" name="name" class="question" id="inputNombre" required autocomplete="off" placeholder="Buscar incidencia"/>
+                <label for="buscar"><span>Buscar incidencia</span></label>
+            </div>
+            <div class="divFiltroSede">
+                <select class="question" name="prioridad" id="inputPrioridad">
+                    <option value="" selected>Prioridad</option>
+                    @foreach($prioridades as $prioridad)
+                        <option value="{{ $prioridad->id }}">{{ $prioridad->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="divFiltroSede">
+                <select class="question" name="estado" id="inputEstado">
+                    <option value="" selected>Estado</option>
+                    @foreach($estados as $estado)
+                        <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <button class="btn btn-secondary" id="btnReiniciarFiltros">
+                <i class="bi bi-arrow-counterclockwise"></i> Reiniciar filtros
+            </button>
+        </div>
+    </div>
+
+    <br>
+    <!-- Tabla de Incidencias -->
     <table class="table table-striped">
         <thead>
             <tr>
@@ -15,23 +46,29 @@
                 <th>Acción</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tabla-incidencias">
             @foreach($incidencias as $incidencia)
-                <tr>
+                <tr data-id="{{ $incidencia->id }}">
                     <td>{{ $incidencia->titulo }}</td>
                     <td>{{ $incidencia->descripcion }}</td>
-                    <td>{{ $incidencia->cliente->name }} {{ $incidencia->cliente->apellidos }}</td>
-                    <td>{{ $incidencia->prioridad->nombre }}</td>
-                    <td>{{ $incidencia->estado->nombre }}</td>
+                    <td>{{ $incidencia->cliente->name ?? 'N/A' }} {{ $incidencia->cliente->apellidos ?? '' }}</td>
+                    <td>{{ $incidencia->prioridad->nombre ?? 'N/A' }}</td>
+                    <td>{{ $incidencia->estado->nombre ?? 'N/A' }}</td>
                     <td>
                         @if($incidencia->estado->nombre == 'Asignada')
-                            <a href="{{ route('incidencias.empezar', $incidencia->id) }}" class="btn btn-primary">Empezar</a>
-                        @elseif($incidencia->estado->nombre == 'En treball')
-                            <a href="{{ route('incidencias.resolver', $incidencia->id) }}" class="btn btn-success">Resolver</a>
+                            <button class="btn-accion" data-action="empezar" style="color: blue;">Empezar</button>
+                        @elseif($incidencia->estado->nombre == 'En trabajo')
+                            <button class="btn-accion" data-action="resolver" style="color: green;">Resolver</button>
+                            <button class="btn-accion" data-action="mensaje" style="color: orange;">Enviar Mensaje</button>
                         @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('../js/filtrotecnico.js') }}"></script>
+    <script src="{{ asset('../js/btn-ajax.js') }}"></script>
 @endsection
