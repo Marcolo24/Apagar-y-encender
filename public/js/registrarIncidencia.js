@@ -2,16 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('incidenciaForm');
     const modal = document.getElementById('registrarIncidenciaModal');
     const bootstrapModal = new bootstrap.Modal(modal);
+    const filtrosForm = document.getElementById('filtrosForm');
+    const estadoSelect = document.getElementById('estado');
+    const ordenSelect = document.getElementById('orden');
+    const ocultarResueltasCheckbox = document.getElementById('ocultar_resueltas');
 
     const tituloInput = document.getElementById('titulo');
     const descripcionInput = document.getElementById('descripcion');
     const subcategoriaSelect = document.getElementById('id_subcategoria');
     const categoriaInput = document.getElementById('categoria');
-
-    const filtrosForm = document.getElementById('filtrosForm');
-    const estadoSelect = document.getElementById('estado');
-    const ordenSelect = document.getElementById('orden');
-    const ocultarResueltasCheckbox = document.getElementById('ocultar_resueltas');
 
     const limpiarFiltrosBtn = document.getElementById('limpiarFiltros');
 
@@ -52,27 +51,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Función para añadir event listeners a una fila
+    function addRowEventListeners(row) {
+        row.addEventListener('click', function() {
+            window.location.href = this.dataset.href;
+        });
+
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    }
+
+    // Añadir event listeners a las filas existentes
+    document.querySelectorAll('.fila-incidencia').forEach(fila => {
+        addRowEventListeners(fila);
+    });
+
+    // Manejo del formulario de incidencia
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const descripcion = descripcionInput.value.trim();
-
-        let errores = [];
-
-        if (!descripcion) {
-            errores.push('La descripción es obligatoria');
-            mostrarError(descripcionInput, 'La descripción es obligatoria');
-        } else if (descripcion.length < 10) {
-            errores.push('La descripción debe tener al menos 10 caracteres');
-            mostrarError(descripcionInput, 'La descripción debe tener al menos 10 caracteres');
-        } else {
-            limpiarError(descripcionInput);
-        }
-
-        if (errores.length > 0) return; // No enviar si hay errores
-
-        // Enviar datos con AJAX
         const formData = new FormData(form);
+
         fetch(form.action, {
             method: 'POST',
             body: formData,
@@ -85,6 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success !== false) {
                 // Crear nueva fila para la tabla
                 const newRow = document.createElement('tr');
+                newRow.className = 'fila-incidencia';
+                newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`;
+                newRow.style.cursor = 'pointer';
+                
                 newRow.innerHTML = `
                     <td>${data.incidencia.titulo}</td>
                     <td>${data.incidencia.descripcion}</td>
@@ -92,9 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${data.incidencia.fecha_inicio}</td>
                     <td>--</td>
                     <td>${data.incidencia.estado.nombre}</td>
-                    <td>
+                    <td onclick="event.stopPropagation();">
                         <button 
-                            class="btn btn-primary cerrar-incidencia-btn disabled"
+                            class="btn btn-primary btn-sm cerrar-incidencia-btn disabled"
                             data-id="${data.incidencia.id}"
                             data-estado="${data.incidencia.estado.nombre}"
                         >
@@ -103,13 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     </td>
                 `;
 
-                // Añadir la nueva fila a la tabla
+                // Añadir event listeners a la nueva fila
+                addRowEventListeners(newRow);
+
+                // Añadir la nueva fila al principio de la tabla
                 document.querySelector('table tbody').prepend(newRow);
 
-                // Limpiar el formulario
+                // Limpiar el formulario y cerrar el modal
                 form.reset();
-
-                // Cerrar el modal
                 bootstrapModal.hide();
 
                 // Mostrar mensaje de éxito
