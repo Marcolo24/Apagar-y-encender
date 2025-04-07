@@ -51,7 +51,7 @@
                 <tr data-id="{{ $incidencia->id }}">
                     <td>{{ $incidencia->titulo }}</td>
                     <td>{{ $incidencia->descripcion }}</td>
-                    <td>{{ $incidencia->cliente->name ?? 'N/A' }} {{ $incidencia->cliente->apellidos ?? '' }}</td>
+                    <td>{{ $incidencia->cliente->name ?? 'N/A' }}</td>
                     <td>{{ $incidencia->prioridad->nombre ?? 'N/A' }}</td>
                     <td>{{ $incidencia->estado->nombre ?? 'N/A' }}</td>
                     <td>
@@ -59,7 +59,8 @@
                             <button class="btn-accion" data-action="empezar" style="color: blue;">Empezar</button>
                         @elseif($incidencia->estado->nombre == 'En trabajo')
                             <button class="btn-accion" data-action="resolver" style="color: green;">Resolver</button>
-                            <button class="btn-accion" data-action="mensaje" style="color: orange;">Enviar Mensaje</button>
+                        @elseif($incidencia->estado->nombre == 'Resuelta')
+                            <p>Resuelta</p>
                         @endif
                     </td>
                 </tr>
