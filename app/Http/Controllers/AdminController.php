@@ -12,11 +12,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 
 class AdminController extends Controller
 {
     public function showUsers()
     {
+        if (Auth::user()->id_rol != 1) {
+            return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
+        }
         // Obtener solo usuarios activos y sedes
         $usuarios = User::with('rol', 'sede')
             ->where('id_estado_usuario', 1)

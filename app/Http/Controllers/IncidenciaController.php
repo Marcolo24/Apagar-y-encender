@@ -5,11 +5,16 @@ use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use App\Models\EstadoIncidencia;
 use App\Models\Prioridad;
+use Illuminate\Support\Facades\Auth;
 
 class IncidenciaController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->id_rol != 2) {
+            return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
+        }
+
         $incidencias = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad'])->get();
         $prioridades = Prioridad::all();
         $estados = EstadoIncidencia::all();
