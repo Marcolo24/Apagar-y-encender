@@ -60,6 +60,11 @@ main {
     border-radius: 15px;
 }
 
+.btn.disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed;
+}
+
 .margin0 {
     margin: 0;
 }
@@ -400,3 +405,13 @@ textarea.question:invalid~input[type="submit"] {
 #divBtns {
     height: 56px
 }
+
+  /* Reduce espacio entre elementos del filtro */
+  #filtrosForm .form-check {
+    margin-bottom: 0;
+  }
+  
+  /* Ajusta la alineación y elimina el espacio extra entre el switch y el botón */
+  #ocultar_resueltas {
+    margin-right: 5px;
+  }

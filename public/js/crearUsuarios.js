@@ -78,10 +78,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     return false;
                 }
 
-                // Validación del formato de correo Gmail
-                const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-                if (!gmailRegex.test(email)) {
-                    Swal.showValidationMessage('El correo debe tener un formato válido de Gmail (ejemplo@gmail.com)');
+                // Validación del formato de correo electrónico
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    Swal.showValidationMessage('El correo debe tener un formato válido (ejemplo@dominio.com)');
                     return false;
                 }
 

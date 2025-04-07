@@ -48,6 +48,13 @@ Route::middleware(['auth'])->group(function () {
     // Nueva ruta para crear usuarios
     Route::post('/dashboard/admin/crear-usuario', [AdminController::class, 'crearUsuario'])
         ->name('dashboard.admin.crear-usuario');
+
+    // Rutas para categorías
+    Route::get('/dashboard/admin/get-categorias', [AdminController::class, 'getCategorias'])
+        ->name('dashboard.admin.get-categorias');
+    
+    Route::post('/dashboard/admin/crear-categoria', [AdminController::class, 'crearCategoria'])
+        ->name('dashboard.admin.crear-categoria');
 });
 
 // Rutas protegidas por autenticación y roles
@@ -84,6 +91,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/incidencias/crear', [ClienteController::class, 'crearIncidencia'])->name('incidencias.crear');
 // Ruta para actualizar la incidencia (estado y prioridad)
 Route::put('/gestor/incidencia/{id}/update-incidencia', [GestorController::class, 'updateIncidencia'])->name('gestor.updateIncidencia');
+
+    // Dentro del grupo de rutas con middleware auth
+    Route::get('/incidencias/{id}/detalle', [ClienteController::class, 'detalleIncidencia'])
+        ->name('incidencias.detalle');
 });
 
 // Ruta para ver incidencias asignadas a técnicos
@@ -93,5 +104,7 @@ Route::get('/dashboard/gestor/incidencias-tecnico', [GestorController::class, 'v
 Route::put('/incidencias/{id}/update-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.updateTecnico');
 
 Route::post('/incidencias/{id}/asignar-tecnico', [GestorController::class, 'updateTecnico'])->name('incidencias.asignar.tecnico');
+
+Route::get('/dashboard/cliente/filtrar', [ClienteController::class, 'filtrar'])->name('cliente.filtrar');
 
 Route::get('/dashboard/tecnico/buscar-incidencias', [IncidenciaController::class, 'buscarIncidencias']);

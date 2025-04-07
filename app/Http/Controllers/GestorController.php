@@ -11,40 +11,74 @@ use App\Models\User;
 
 class GestorController extends Controller
 {
-    public function showIncidencias()
+    public function showIncidencias(Request $request)
     {
-        // Verifica que el usuario autenticado sea un gestor
         if (Auth::user()->id_rol != 3) {
             return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
         }
-
-        // Obtener incidencias con relaciones de cliente, prioridad y estado
-        $incidencias = Incidencia::with(['cliente', 'prioridad', 'estado'])->get();
+    
+        // Obtener filtros
+        $filtroPrioridad = $request->input('filtro_prioridad');
+        $filtroTecnico = $request->input('filtro_tecnico');
+        $filtroFecha = $request->input('filtro_fecha', 'asc');
+    
+        // Obtener prioridades, estados y técnicos
         $prioridades = Prioridad::all();
-        $estados = EstadoIncidencia::all(); 
-
-        return view('dashboard.gestor', compact('incidencias', 'prioridades', 'estados'));
+        $estados = EstadoIncidencia::all();
+        $tecnicos = User::where('id_rol', 2)->where('id_sede', Auth::user()->id_sede)->get();
+    
+        // Obtener estado "Cerrada"
+        $estadoCerrada = EstadoIncidencia::where('nombre', 'Cerrada')->first();
+    
+        // Consulta de incidencias
+        $query = Incidencia::with(['cliente', 'prioridad', 'estado', 'tecnico'])
+            ->when($estadoCerrada, function ($query) use ($estadoCerrada) {
+                return $query->where('id_estado', '!=', $estadoCerrada->id);
+            });
+    
+        // Aplicar filtro por prioridad
+        if (!empty($filtroPrioridad)) {
+            $query->where('id_prioridad', $filtroPrioridad);
+        }
+    
+        // Aplicar filtro por técnico
+        if (!empty($filtroTecnico)) {
+            $query->where('id_tecnico', $filtroTecnico);
+        }
+    
+        // Ordenar por fecha
+        $incidencias = $query->orderBy('fecha_inicio', $filtroFecha)->get();
+    
+        return view('dashboard.gestor', compact('incidencias', 'prioridades', 'estados', 'tecnicos'));
     }
-
+                        
     // Método para actualizar estado y prioridad de la incidencia
     public function updateIncidencia(Request $request, $id)
     {
+        // Obtener la incidencia
         $incidencia = Incidencia::findOrFail($id);
-
-        // Validación de los campos
-        $request->validate([
-            'id_prioridad' => 'required|exists:prioridad,id',
-            'id_estado' => 'required|exists:estado_incidencia,id',
+    
+        // Validar los datos recibidos
+        $data = $request->validate([
+            'id_prioridad' => 'nullable|exists:prioridad,id',
+            'id_estado' => 'nullable|exists:estado_incidencia,id',
         ]);
-
-        // Actualizar prioridad y estado
-        $incidencia->id_prioridad = $request->input('id_prioridad');
-        $incidencia->id_estado = $request->input('id_estado');
+    
+        // Actualizar los datos de la incidencia
+        if (isset($data['id_prioridad'])) {
+            $incidencia->id_prioridad = $data['id_prioridad'];
+        }
+    
+        if (isset($data['id_estado'])) {
+            $incidencia->id_estado = $data['id_estado'];
+        }
+    
+        // Guardar los cambios en la base de datos
         $incidencia->save();
-
-        return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada con éxito.');
+        
+        return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada correctamente.');
     }
-
+            
     public function verIncidenciasTecnico()
     {
         // Obtener la sede del gestor autenticado
@@ -56,32 +90,38 @@ class GestorController extends Controller
         // Obtener técnicos de la misma sede
         $tecnicos = User::where('id_rol', 2)->where('id_sede', $sedeGestor)->get();
     
-        return view('dashboard.incidencias-tecnico', compact('incidenciasAsignadas', 'tecnicos'));
+        return view('dashboard.gestor', compact('incidenciasAsignadas', 'tecnicos'));
     }
     
     public function updateTecnico(Request $request, $id)
     {
-        // Validar que el técnico seleccionado existe o sea null
+        // Validar el técnico (puede ser null)
         $request->validate([
             'id_tecnico' => 'nullable|exists:users,id'
         ]);
-
-        // Buscar la incidencia
+    
+        // Obtener la incidencia
         $incidencia = Incidencia::findOrFail($id);
-
-        // Asignar el técnico
+    
+        // Asignar el técnico o eliminarlo si es null
         $incidencia->id_tecnico = $request->id_tecnico;
-
-        // Si se asigna un técnico, cambiar el estado a "Asignada"
-        if ($request->id_tecnico) {
-            $estadoAsignada = EstadoIncidencia::where('nombre', 'Asignada')->first();
-            if ($estadoAsignada) {
-                $incidencia->id_estado = $estadoAsignada->id;
-            }
+    
+        // Obtener estados
+        $estadoAsignada = EstadoIncidencia::where('nombre', 'Asignada')->first();
+        $estadoSinAsignar = EstadoIncidencia::where('nombre', 'Sin asignar')->first();
+    
+        // Si hay un técnico, cambia el estado a "Asignada"
+        if ($request->id_tecnico && $estadoAsignada) {
+            $incidencia->id_estado = $estadoAsignada->id;
         }
-
+        // Si no hay técnico, cambia el estado a "Sin asignar"
+        elseif (!$request->id_tecnico && $estadoSinAsignar) {
+            $incidencia->id_estado = $estadoSinAsignar->id;
+        }
+    
         $incidencia->save();
-
-        return redirect()->route('gestor.verIncidenciasTecnico')->with('success', 'Técnico asignado correctamente.');
+    
+        return redirect()->route('dashboard.gestor')->with('success', 'Técnico actualizado correctamente.');
     }
+
 }

@@ -1,0 +1,130 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos generales */
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #0056b3;
+    margin-bottom: 20px;
+}
+
+/* Contenedor del formulario de filtros en una sola línea con menos altura */
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centrar verticalmente */
+    flex-wrap: wrap; /* Ajuste en pantallas pequeñas */
+    gap: 10px;
+    background: #fff;
+    padding: 5px 15px; /* Menos padding para reducir altura */
+    border-radius: 6px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Ajuste de los filtros */
+form div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    white-space: nowrap; /* Evita saltos de línea */
+}
+
+form select {
+    padding: 3px 6px; /* Padding reducido */
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    cursor: pointer;
+    min-width: 130px; /* Tamaño más compacto */
+    height: 25px; /* Menos altura */
+}
+
+/* Tabla de incidencias */
+table {
+    width: 98%;
+    margin: 15px auto; /* Reducir margen para compactar */
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajuste del ancho de columnas */
+th, td {
+    padding: 10px; /* Reducir padding */
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Estilo para los títulos de las columnas */
+th {
+    background-color: #007bff;
+    color: black;
+    font-weight: bold;
+}
+
+/* Hacer que la columna de "Incidencia" sea más ancha */
+th:first-child, td:first-child {
+    width: 30%;
+}
+
+/* Estilos para los select dentro de la tabla */
+td form select {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px; /* Más compacto */
+    height: 28px;
+}
+
+/* Responsive */
+/* RESPONSIVE DESIGN PARA MÓVILES */
+@media (max-width: 768px) {
+    form {
+        flex-direction: column; /* Cambiar a columna */
+        align-items: center;
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    form div {
+        width: 100%;
+        text-align: center;
+    }
+
+    form select {
+        width: 100%; /* Ocupa todo el ancho en móvil */
+        height: 30px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    /* Hacer que la tabla sea desplazable horizontalmente */
+    .table-container {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    table {
+        width: 100%;
+        min-width: 600px; /* Asegura que no se deforme en móvil */
+    }
+}

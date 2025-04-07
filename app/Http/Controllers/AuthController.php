@@ -34,7 +34,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // Validación del formulario
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -43,14 +42,20 @@ class AuthController extends Controller
             'password.required' => 'La contraseña es obligatoria.',
         ]);
 
-        
+        // Primero verificamos si existe el usuario con estado 1
+        $user = User::where('correo', $request->email)
+                    ->where('id_estado_usuario', 1)
+                    ->first();
 
-        // Buscar el usuario por email
-        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Las credenciales proporcionadas son incorrectas o la cuenta está desactivada.',
+            ]);
+        }
 
-        // Verificar si el usuario existe y la contraseña es correcta
-        if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user); // Resetear intentos fallidos
+        // Verificar la contraseña
+        if (Hash::check($request->password, $user->password)) {
+            Auth::login($user);
 
             switch ($user->id_rol) {
                 case 1:

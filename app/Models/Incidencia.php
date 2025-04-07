@@ -52,7 +52,7 @@ class Incidencia extends Model
     {
         return $this->belongsTo(Prioridad::class, 'id_prioridad');
     }
-
+    
     // Relación con la subcategoría
     public function subcategoria()
     {
