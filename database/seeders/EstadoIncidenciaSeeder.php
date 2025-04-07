@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class EstadoIncidenciaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         DB::table('estado_incidencia')->insert([
@@ -20,4 +17,4 @@ class EstadoIncidenciaSeeder extends Seeder
             ['id' => 5, 'nombre' => 'Cerrada'],
         ]);
     }
-} 
+}

@@ -1,0 +1,303 @@
+/* Estilos generales */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 130vh;
+    margin: 0;
+    padding-top: 60px;
+    /* Añadido para evitar que el contenido se solape con el navbar */
+}
+
+
+/* Navbar */
+
+.navbar {
+    background-color: #ffffff;
+    /* Color de fondo del navbar */
+    color: rgb(0, 0, 0);
+    padding: 15px 20px;
+    width: 100%;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin-top: 15px;
+    margin-left: 50px;
+    justify-content: space-between;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+
+/* Contenedor del formulario */
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 480px;
+    text-align: center;
+    border: 1px solid #ddd;
+    height: 520px;
+}
+
+
+/* Título */
+
+h2 {
+    font-size: 28px;
+    color: #1a1a3b;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+
+/* Inputs y etiquetas */
+
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #888;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 17px;
+    background: transparent;
+    outline: none;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+
+/* Botón de iniciar sesión */
+
+button[type="submit"] {
+    background-color: #ff6b5a;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    padding: 16px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    background-color: #e65a4a;
+}
+
+
+/* Enlace de recuperar contraseña */
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #1a1a3b;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+
+/* Línea divisora */
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.divider span {
+    padding: 0 10px;
+    font-size: 14px;
+    color: #888;
+}
+
+
+/* Botón de inicio de sesión con Facebook */
+
+.fb-login {
+    background-color: #3b5998;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.fb-login:hover {
+    background-color: #2d4373;
+}
+
+.fb-login img {
+    width: 20px;
+    height: 20px;
+}
+
+
+/* Enlace de registro */
+
+.register-link {
+    display: block;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #1a1a3b;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+        margin: 0;
+        padding-top: 60px;
+        /* Añadido para evitar que el contenido se solape con el navbar */
+    }
+    .container {
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+        border: 1px solid #ddd;
+        height: 400px;
+    }
+    .register-link {
+        display: block;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #1a1a3b;
+        text-decoration: none;
+    }
+    button[type="submit"] {
+        background-color: #ff6b5a;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: none;
+        padding: 12px;
+        width: 100%;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 5px;
+        font-size: 12px;
+    }
+    label {
+        display: block;
+        text-align: left;
+        margin-bottom: 5px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #888;
+    }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        font-size: 12px;
+        background: transparent;
+        outline: none;
+    }
+    h2 {
+        font-size: 20px;
+        color: #1a1a3b;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+    .forgot-password {
+        display: block;
+        text-align: right;
+        font-size: 12px;
+        margin-bottom: 10px;
+        color: #1a1a3b;
+        text-decoration: none;
+    }
+    .fb-login {
+        background-color: #3b5998;
+        color: white;
+        font-weight: bold;
+        border: none;
+        padding: 10px;
+        width: 100%;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0px;
+        font-size: 12px;
+        transition: 0.3s;
+    }
+    .navbar-container {
+        max-width: 1200px;
+        margin-top: 5px;
+        margin-left: 120px;
+        justify-content: space-between;
+    }
+    .navbar {
+        height: 30px;
+    }
+}

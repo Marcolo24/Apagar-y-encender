@@ -19,8 +19,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'apellidos',
         'email',
+        'correo',
         'password',
+        'id_sede',
+        'id_rol',
+        'id_estado_usuario'
     ];
 
     /**
@@ -38,11 +43,18 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    public function rol()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Rol::class, 'id_rol');
+    }
+
+    public function sede()
+    {
+        return $this->belongsTo(Sede::class, 'id_sede');
     }
 }

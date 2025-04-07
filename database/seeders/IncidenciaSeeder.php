@@ -17,12 +17,12 @@ class IncidenciaSeeder extends Seeder
                 'id_cliente' => 1,
                 'id_tecnico' => 2,
                 'id_estado' => 1,
-                'id_subcategoria' => 1,
+                'id_subcategoria' => 2,
                 'id_prioridad' => 1,
                 'titulo' => 'Problema de conexión',
                 'descripcion' => 'No se puede conectar a la red WiFi.',
                 'fecha_inicio' => now(),
-                'fecha_final' => null,
+                'fecha_final' => now(),
                 'img' => 'imagen.png',
             ],
             [
@@ -34,7 +34,7 @@ class IncidenciaSeeder extends Seeder
                 'titulo' => 'Error de hardware',
                 'descripcion' => 'El disco duro no responde.',
                 'fecha_inicio' => now()->subDays(1),
-                'fecha_final' => null,
+                'fecha_final' => now(),
                 'img' => 'imagen2.png',
             ],
             // Agrega más incidencias si es necesario
