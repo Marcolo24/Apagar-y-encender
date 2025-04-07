@@ -60,18 +60,21 @@ class GestorController extends Controller
     
         // Validar los datos recibidos
         $data = $request->validate([
-            'id_prioridad' => 'required|exists:prioridad,id',
-            'id_estado' => 'required|exists:estado_incidencia,id',
+            'id_prioridad' => 'nullable|exists:prioridad,id',
+            'id_estado' => 'nullable|exists:estado_incidencia,id',
         ]);
     
-        // Verificar si el estado ha cambiado a "Sin asignar"
-        $estadoSinAsignar = EstadoIncidencia::where('nombre', 'Sin asignar')->first();
-        if ($estadoSinAsignar && $data['id_estado'] == $estadoSinAsignar->id) {
-            $incidencia->id_tecnico = null; // Eliminar el técnico asignado
+        // Actualizar los datos de la incidencia
+        if (isset($data['id_prioridad'])) {
+            $incidencia->id_prioridad = $data['id_prioridad'];
         }
     
-        // Actualizar los datos
-        $incidencia->update($data);
+        if (isset($data['id_estado'])) {
+            $incidencia->id_estado = $data['id_estado'];
+        }
+    
+        // Guardar los cambios en la base de datos
+        $incidencia->save();
         
         return redirect()->route('dashboard.gestor')->with('success', 'Incidencia actualizada correctamente.');
     }
