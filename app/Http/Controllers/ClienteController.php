@@ -9,6 +9,7 @@ use App\Models\Incidencia;
 use App\Models\EstadoIncidencia;
 use App\Models\Prioridad;
 use App\Models\Subcategoria;
+use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
 {
@@ -111,31 +112,41 @@ class ClienteController extends Controller
 
         // Obtener el estado inicial "Sin asignar"
         $estadoInicial = EstadoIncidencia::where('nombre', 'Sin asignar')->firstOrFail();
+        DB::beginTransaction(); 
+        try{    
+            // Procesar la imagen si se ha subido una
+            $rutaImagen = null;
+            if ($request->hasFile('img')) {
+                $imagen = $request->file('img');
+                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+                $rutaImagen = $imagen->storeAs('public/img', $nombreImagen);
+            }
 
-        // Procesar la imagen si se ha subido una
-        $rutaImagen = null;
-        if ($request->hasFile('img')) {
-            $imagen = $request->file('img');
-            $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-            $rutaImagen = $imagen->storeAs('public/img', $nombreImagen);
+            $incidencia = Incidencia::create([
+                'titulo' => $request->titulo,
+                'descripcion' => $request->descripcion,
+                'id_cliente' => $cliente->id,
+                'id_estado' => $estadoInicial->id,
+                'id_subcategoria' => $request->id_subcategoria,
+                'id_prioridad' => $request->id_prioridad,
+                'fecha_inicio' => now(),
+                'id_tecnico' => null,
+                'img' => $rutaImagen
+            ]);
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Incidencia registrada correctamente.',
+                'incidencia' => $incidencia->load('prioridad', 'estado', 'cliente.sede')
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback(); // Revertir cambios en caso de error
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al registrar la incidencia: ' . $e->getMessage()
+            ], 500);
         }
-
-        $incidencia = Incidencia::create([
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-            'id_cliente' => $cliente->id,
-            'id_estado' => $estadoInicial->id,
-            'id_subcategoria' => $request->id_subcategoria,
-            'id_prioridad' => $request->id_prioridad,
-            'fecha_inicio' => now(),
-            'id_tecnico' => null,
-            'img' => $rutaImagen
-        ]);
-
-        return response()->json([
-            'message' => 'Incidencia registrada correctamente.',
-            'incidencia' => $incidencia->load('prioridad', 'estado', 'cliente.sede')
-        ]);
     }
 
     public function detalleIncidencia($id)
