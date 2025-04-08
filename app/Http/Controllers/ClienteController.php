@@ -119,7 +119,7 @@ class ClienteController extends Controller
             if ($request->hasFile('img')) {
                 $imagen = $request->file('img');
                 $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
-                $rutaImagen = $imagen->storeAs('public/img', $nombreImagen);
+                $rutaImagen = $imagen->storeAs('img', $nombreImagen, 'public');
             }
 
             $incidencia = Incidencia::create([
