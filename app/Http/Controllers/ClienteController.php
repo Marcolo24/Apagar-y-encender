@@ -136,6 +136,7 @@ class ClienteController extends Controller
             DB::commit();
 
             return response()->json([
+                'success' => true,
                 'message' => 'Incidencia registrada correctamente.',
                 'incidencia' => $incidencia->load('prioridad', 'estado', 'cliente.sede')
             ]);

@@ -121,40 +121,41 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success !== false) {
                 // Crear nueva fila para la tabla
-                const newRow = document.createElement('tr');
-                newRow.className = 'fila-incidencia';
-                newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`;
-                newRow.style.cursor = 'pointer';
-                
-                newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`;
-
-                newRow.innerHTML = `
-                    <td>${data.incidencia.titulo}</td>
-                    <td>${data.incidencia.descripcion}</td>
-                    <td>${data.incidencia.prioridad.nombre}</td>
-                    <td>${data.incidencia.fecha_inicio}</td>
-                    <td>--</td>
-                    <td>${data.incidencia.estado.nombre}</td>
-                    <td onclick="event.stopPropagation();">
-                        <button 
-                            class="btn btn-primary btn-sm cerrar-incidencia-btn disabled"
-                            data-id="${data.incidencia.id}"
-                            data-estado="${data.incidencia.estado.nombre}"
-                        >
-                            Cerrar
-                        </button>
-                    </td>
-                `;                
-
-                // Añadir event listeners a la nueva fila
-                addRowEventListeners(newRow);
-
-                // Añadir la nueva fila al principio de la tabla
-                document.querySelector('table tbody').prepend(newRow);
-
+                // const newRow = document.createElement('tr');
                 // Limpiar el formulario y cerrar el modal
                 form.reset();
                 bootstrapModal.hide();
+
+                applyFilters();
+                // newRow.className = 'fila-incidencia'; david
+                // newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`; david
+                // newRow.style.cursor = 'pointer';david
+                
+                // newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`; david
+
+                // newRow.innerHTML = ` david
+                //     <td>${data.incidencia.titulo}</td>
+                //     <td>${data.incidencia.descripcion}</td>
+                //     <td>${data.incidencia.prioridad.nombre}</td>
+                //     <td>${data.incidencia.fecha_inicio}</td>
+                //     <td>--</td>
+                //     <td>${data.incidencia.estado.nombre}</td>
+                //     <td onclick="event.stopPropagation();">
+                //         <button 
+                //             class="btn btn-primary btn-sm cerrar-incidencia-btn disabled"
+                //             data-id="${data.incidencia.id}"
+                //             data-estado="${data.incidencia.estado.nombre}"
+                //         >
+                //             Cerrar
+                //         </button>
+                //     </td>
+                // `;                
+
+                // Añadir event listeners a la nueva fila
+                // addRowEventListeners(newRow); david
+
+                // Añadir la nueva fila al principio de la tabla
+                // document.querySelector('table tbody').prepend(newRow); david
 
                 // Mostrar mensaje de éxito
                 Swal.fire({
