@@ -14,6 +14,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const limpiarFiltrosBtn = document.getElementById('limpiarFiltros');
 
+    function activarFilasIncidencia() {
+        document.querySelectorAll('.fila-incidencia').forEach(fila => {
+            fila.addEventListener('click', function () {
+                window.location.href = this.dataset.href;
+            });
+    
+            fila.addEventListener('mouseenter', function () {
+                this.style.backgroundColor = '#f8f9fa';
+            });
+    
+            fila.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = '';
+            });
+        });
+    }
+    
+
+    tituloInput.addEventListener('blur', function () {
+        const titulo = tituloInput.value.trim();
+    
+        const regex = /^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ.,()¡!¿?"'-]+$/;
+    
+        if (!titulo) {
+            mostrarError(tituloInput, 'El título es obligatorio');
+        } else if (!regex.test(titulo)) {
+            mostrarError(tituloInput, 'El título contiene caracteres no permitidos');
+        } else {
+            limpiarError(tituloInput);
+        }
+    });    
+
     subcategoriaSelect.addEventListener('change', function() {
         const selectedOption = subcategoriaSelect.options[subcategoriaSelect.selectedIndex];
         const categoria = selectedOption.getAttribute('data-categoria');
@@ -67,9 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Añadir event listeners a las filas existentes
-    document.querySelectorAll('.fila-incidencia').forEach(fila => {
+    /*document.querySelectorAll('.fila-incidencia').forEach(fila => {
         addRowEventListeners(fila);
-    });
+    });*/
+    activarFilasIncidencia();
+
 
     // Manejo del formulario de incidencia
     form.addEventListener('submit', function(e) {
@@ -93,6 +126,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`;
                 newRow.style.cursor = 'pointer';
                 
+                newRow.dataset.href = `/incidencias/${data.incidencia.id}/detalle`;
+
                 newRow.innerHTML = `
                     <td>${data.incidencia.titulo}</td>
                     <td>${data.incidencia.descripcion}</td>
@@ -109,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             Cerrar
                         </button>
                     </td>
-                `;
+                `;                
 
                 // Añadir event listeners a la nueva fila
                 addRowEventListeners(newRow);
@@ -167,6 +202,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(html => {
             document.getElementById('incidencias-tbody').innerHTML = html;
             
+            activarFilasIncidencia();
+
             // Actualizar la URL sin recargar la página
             const newUrl = window.location.pathname;
             window.history.pushState({}, '', newUrl);
@@ -197,6 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(html => {
             document.getElementById('incidencias-tbody').innerHTML = html;
             
+            activarFilasIncidencia();
+
             // Actualizar la URL sin recargar la página
             const newUrl = `${window.location.pathname}?${params}`;
             window.history.pushState({}, '', newUrl);
