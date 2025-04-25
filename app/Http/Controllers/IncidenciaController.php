@@ -5,18 +5,33 @@ use App\Models\Incidencia;
 use Illuminate\Http\Request;
 use App\Models\EstadoIncidencia;
 use App\Models\Prioridad;
+use Illuminate\Support\Facades\Auth;
 
 class IncidenciaController extends Controller
 {
     public function index()
     {
-        $incidencias = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad'])->get();
+        $tecnico = Auth::user();
+    
+        // Asegurarse que es técnico
+        if ($tecnico->id_rol != 2) {
+            return redirect()->route('index')->withErrors(['access' => 'No tienes permiso para acceder aquí.']);
+        }
+    
+        // Incidencias de su sede y asignadas a él
+        $incidencias = Incidencia::with(['cliente', 'tecnico', 'estado', 'prioridad'])
+            ->where('id_tecnico', $tecnico->id) // asignadas a él
+            ->whereHas('cliente', function ($query) use ($tecnico) {
+                $query->where('id_sede', $tecnico->id_sede); // misma sede
+            })
+            ->get();
+    
         $prioridades = Prioridad::all();
         $estados = EstadoIncidencia::all();
-
+    
         return view('dashboard.tecnico', compact('incidencias', 'prioridades', 'estados'));
     }
-
+    
     // Métodos para las acciones
     public function asignar($id)
     {

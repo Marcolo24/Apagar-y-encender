@@ -32,9 +32,12 @@ class GestorController extends Controller
     
         // Consulta de incidencias
         $query = Incidencia::with(['cliente', 'prioridad', 'estado', 'tecnico'])
-            ->when($estadoCerrada, function ($query) use ($estadoCerrada) {
-                return $query->where('id_estado', '!=', $estadoCerrada->id);
-            });
+        ->whereHas('cliente', function ($q) {
+            $q->where('id_sede', Auth::user()->id_sede);
+        })
+        ->when($estadoCerrada, function ($query) use ($estadoCerrada) {
+            return $query->where('id_estado', '!=', $estadoCerrada->id);
+        });
     
         // Aplicar filtro por prioridad
         if (!empty($filtroPrioridad)) {
