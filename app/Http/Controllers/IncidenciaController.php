@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\EstadoIncidencia;
 use App\Models\Prioridad;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth;
 
 class IncidenciaController extends Controller
 {
